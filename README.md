@@ -1,6 +1,4 @@
-# data_pipeline
-
-Project: Financial Data Aggregation and Analysis Pipeline
+# Project: Financial Data Aggregation and Analysis Pipeline
 
 Description:
 Build a data pipeline using Ruby and Airflow to aggregate and analyze financial data points from multiple
