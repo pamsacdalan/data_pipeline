@@ -58,14 +58,30 @@ scheds.each do |sched|
         close NUMERIC,
         volume BIGINT
       )')
-      conn.exec('DELETE FROM stock_prices_intraday')
+      # conn.exec('DELETE FROM stock_prices_intraday')
+      # processed_data.each do |row|
+      #      timestamp = row[:timestamp]
+      #      symbol = row[:symbol]
+      #   conn.exec_params('INSERT INTO stock_prices_intraday (timestamp, symbol, open, high, low, close, volume) 
+      #       VALUES ($1, $2, $3, $4, $5, $6, $7)', 
+      #       [row[:timestamp], row[:symbol], row[:open], row[:high], row[:low], row[:close], row[:volume]])
+      # end
       processed_data.each do |row|
            timestamp = row[:timestamp]
            symbol = row[:symbol]
-        conn.exec_params('INSERT INTO stock_prices_intraday (timestamp, symbol, open, high, low, close, volume) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7)', 
-            [row[:timestamp], row[:symbol], row[:open], row[:high], row[:low], row[:close], row[:volume]])
+    
+           existing_data = conn.exec_params('SELECT COUNT(*) FROM stock_prices_intraday WHERE timestamp = $1 AND symbol = $2', [timestamp, symbol]).getvalue(0, 0).to_i
+    
+           if existing_data.zero?
+             conn.exec_params('INSERT INTO stock_prices_intraday (timestamp, symbol, open, high, low, close, volume) 
+               VALUES ($1, $2, $3, $4, $5, $6, $7)', 
+               [row[:timestamp], row[:symbol], row[:open], row[:high], row[:low], row[:close], row[:volume]])
+           elsif existing_data == 1
+             conn.exec_params('UPDATE stock_prices_intraday SET open = $1, high = $2, low = $3, close = $4, volume = $5 WHERE timestamp = $6 AND symbol = $7', 
+               [row[:open], row[:high], row[:low], row[:close], row[:volume], timestamp, symbol])
+           end
       end
+
 
     elsif sched == 'DAILY_ADJUSTED'
       conn.exec('CREATE TABLE IF NOT EXISTS stock_prices_daily (
@@ -77,13 +93,20 @@ scheds.each do |sched|
         close NUMERIC,
         volume BIGINT
       )')
-      conn.exec('DELETE FROM stock_prices_daily')
       processed_data.each do |row|
         timestamp = row[:timestamp]
         symbol = row[:symbol]
-        conn.exec_params('INSERT INTO stock_prices_daily (timestamp, symbol, open, high, low, close, volume) 
+ 
+        existing_data = conn.exec_params('SELECT COUNT(*) FROM stock_prices_daily WHERE timestamp = $1 AND symbol = $2', [timestamp, symbol]).getvalue(0, 0).to_i
+ 
+        if existing_data.zero?
+          conn.exec_params('INSERT INTO stock_prices_daily (timestamp, symbol, open, high, low, close, volume) 
             VALUES ($1, $2, $3, $4, $5, $6, $7)', 
             [row[:timestamp], row[:symbol], row[:open], row[:high], row[:low], row[:close], row[:volume]])
+        elsif existing_data == 1
+          conn.exec_params('UPDATE stock_prices_daily SET open = $1, high = $2, low = $3, close = $4, volume = $5 WHERE timestamp = $6 AND symbol = $7', 
+            [row[:open], row[:high], row[:low], row[:close], row[:volume], timestamp, symbol])
+        end
       end
 
     elsif sched == 'WEEKLY'
@@ -96,13 +119,20 @@ scheds.each do |sched|
         close NUMERIC,
         volume BIGINT
       )')
-      conn.exec('DELETE FROM stock_prices_weekly')
       processed_data.each do |row|
         timestamp = row[:timestamp]
         symbol = row[:symbol]
-        conn.exec_params('INSERT INTO stock_prices_weekly (timestamp, symbol, open, high, low, close, volume) 
+ 
+        existing_data = conn.exec_params('SELECT COUNT(*) FROM stock_prices_weekly WHERE timestamp = $1 AND symbol = $2', [timestamp, symbol]).getvalue(0, 0).to_i
+ 
+        if existing_data.zero?
+          conn.exec_params('INSERT INTO stock_prices_weekly (timestamp, symbol, open, high, low, close, volume) 
             VALUES ($1, $2, $3, $4, $5, $6, $7)', 
             [row[:timestamp], row[:symbol], row[:open], row[:high], row[:low], row[:close], row[:volume]])
+        elsif existing_data == 1
+          conn.exec_params('UPDATE stock_prices_weekly SET open = $1, high = $2, low = $3, close = $4, volume = $5 WHERE timestamp = $6 AND symbol = $7', 
+            [row[:open], row[:high], row[:low], row[:close], row[:volume], timestamp, symbol])
+        end
       end
 
     elsif sched == 'MONTHLY'
@@ -115,13 +145,20 @@ scheds.each do |sched|
         close NUMERIC,
         volume BIGINT
       )')
-      conn.exec('DELETE FROM stock_prices_monthly')
       processed_data.each do |row|
         timestamp = row[:timestamp]
         symbol = row[:symbol]
-        conn.exec_params('INSERT INTO stock_prices_monthly (timestamp, symbol, open, high, low, close, volume) 
+ 
+        existing_data = conn.exec_params('SELECT COUNT(*) FROM stock_prices_monthly WHERE timestamp = $1 AND symbol = $2', [timestamp, symbol]).getvalue(0, 0).to_i
+ 
+        if existing_data.zero?
+          conn.exec_params('INSERT INTO stock_prices_monthly (timestamp, symbol, open, high, low, close, volume) 
             VALUES ($1, $2, $3, $4, $5, $6, $7)', 
             [row[:timestamp], row[:symbol], row[:open], row[:high], row[:low], row[:close], row[:volume]])
+        elsif existing_data == 1
+          conn.exec_params('UPDATE stock_prices_monthly SET open = $1, high = $2, low = $3, close = $4, volume = $5 WHERE timestamp = $6 AND symbol = $7', 
+            [row[:open], row[:high], row[:low], row[:close], row[:volume], timestamp, symbol])
+        end
       end
     end
 
@@ -141,7 +178,9 @@ scheds.each do |sched|
     #       [row[:open], row[:high], row[:low], row[:close], row[:volume], timestamp, symbol])
     #   end
     # end
+    sleep(60)
   end
+  sleep(60)
 end
 
 # Close the database connection
