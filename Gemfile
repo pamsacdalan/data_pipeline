@@ -5,4 +5,4 @@ source "https://rubygems.org"
 # gem "rails"
 gem 'httparty'
 gem 'csv'
-gem 'sqlite3'
+gem 'pg'

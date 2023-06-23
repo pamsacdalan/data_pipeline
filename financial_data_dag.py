@@ -1,5 +1,7 @@
 #transfer code to WSL dags folder: cp financial_data_dag.py /home/bvillamil/airflow/dags
 
+
+
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
@@ -13,7 +15,7 @@ default_args = {
 #    'retry_delay': timedelta(minutes=5)
 }
 
-dag = DAG('FinancialDataPipelineDAG', 
+dag = DAG('FinancialDataPipeline_DAG', 
           default_args=default_args, 
           schedule_interval='0 0 * * *')
 
