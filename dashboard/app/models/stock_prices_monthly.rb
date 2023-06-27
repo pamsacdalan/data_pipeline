@@ -1,0 +1,2 @@
+class StockPricesMonthly < ApplicationRecord
+end

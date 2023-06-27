@@ -1,0 +1,2 @@
+class StockPricesIntraday < ApplicationRecord
+end

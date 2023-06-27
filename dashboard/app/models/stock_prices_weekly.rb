@@ -1,0 +1,2 @@
+class StockPricesWeekly < ApplicationRecord
+end
