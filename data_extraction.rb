@@ -9,7 +9,7 @@ interval = Config::INTERVAL
 symbols = Config::SYMBOLS
 scheds = Config::SCHEDS
 db_config = Config::DB_CONFIG
-
+7
 conn = PG.connect(db_config)
 
 scheds.each do |sched|
