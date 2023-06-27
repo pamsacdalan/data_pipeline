@@ -1,0 +1,30 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: jasonroberto38
+  password: fULOsTQa54tp
+  database: data_pipeline
+  host: ep-hidden-salad-492177.ap-southeast-1.aws.neon.tech
+  port: 5432
+  
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: jasonroberto38
+  password: fULOsTQa54tp
+  database: data_pipeline
+  host: ep-hidden-salad-492177.ap-southeast-1.aws.neon.tech
+  port: 5432
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: jasonroberto38
+  password: fULOsTQa54tp
+  database: data_pipeline
+  host: ep-hidden-salad-492177.ap-southeast-1.aws.neon.tech
+  port: 5432
