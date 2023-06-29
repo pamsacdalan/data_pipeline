@@ -6,6 +6,8 @@
     "autoprefixer": "^10.4.14",
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.10.5",
+    "chart.js": "^4.3.0",
+    "chartkick": "^5.0.1",
     "esbuild": "^0.18.10",
     "feather-icons": "^4.29.0",
     "jquery": "^3.7.0",

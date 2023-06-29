@@ -127,8 +127,14 @@
           </button>
         </div>
       </div>
+    
+        <!--Graphs-->
+      <%# <canvas class="my-4 w-100" id="myChart" width="900" height="380">
 
-      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+      </canvas> %>
+      <%= pie_chart StockPricesDaily.group(:symbol).count %>
+
+    
 
       <h2>Section title</h2>
       <div class="table-responsive">

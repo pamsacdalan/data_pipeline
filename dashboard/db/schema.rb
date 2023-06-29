@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_26_090828) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_26_091928) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -38,19 +38,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_26_090828) do
     t.decimal "low"
     t.decimal "close"
     t.bigint "volume"
+    t.decimal "average_price"
+    t.decimal "previous_value"
+    t.virtual "percent_change", type: :decimal, as: "round((((open - previous_value) / previous_value) * (100)::numeric), 3)", stored: true
+    t.virtual "change", type: :decimal, as: "round((open - previous_value), 3)", stored: true
   end
 
   create_table "stock_prices_intraday", id: false, force: :cascade do |t|
-    t.datetime "timestamp", precision: nil
-    t.text "symbol"
-    t.decimal "open"
-    t.decimal "high"
-    t.decimal "low"
-    t.decimal "close"
-    t.bigint "volume"
-  end
-
-  create_table "stock_prices_intraday_adrian", id: false, force: :cascade do |t|
     t.datetime "timestamp", precision: nil
     t.text "symbol"
     t.decimal "open"
@@ -92,6 +86,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_26_090828) do
     t.decimal "low"
     t.decimal "close"
     t.bigint "volume"
+    t.decimal "average_price"
+    t.decimal "previous_value"
+    t.virtual "percent_change", type: :decimal, as: "round((((open - previous_value) / previous_value) * (100)::numeric), 3)", stored: true
+    t.virtual "change", type: :decimal, as: "round((open - previous_value), 3)", stored: true
   end
 
   create_table "stock_prices_weeklies", force: :cascade do |t|
@@ -114,6 +112,49 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_26_090828) do
     t.decimal "low"
     t.decimal "close"
     t.bigint "volume"
+    t.decimal "average_price"
+    t.decimal "previous_value"
+    t.virtual "percent_change", type: :decimal, as: "round((((open - previous_value) / previous_value) * (100)::numeric), 3)", stored: true
+    t.virtual "change", type: :decimal, as: "round((open - previous_value), 3)", stored: true
+  end
+
+  create_table "test_daily_neil", id: false, force: :cascade do |t|
+    t.datetime "timestamp", precision: nil
+    t.text "symbol"
+    t.decimal "open"
+    t.decimal "high"
+    t.decimal "low"
+    t.decimal "close"
+    t.bigint "volume"
+    t.decimal "average_price"
+  end
+
+  create_table "test_intraday_with_computation", id: false, force: :cascade do |t|
+    t.datetime "timestamp", precision: nil
+    t.text "symbol"
+    t.decimal "open"
+    t.decimal "high"
+    t.decimal "low"
+    t.decimal "close"
+    t.bigint "volume"
+    t.virtual "average_price", type: :decimal, as: "round(((((open + high) + low) + close) / (4)::numeric), 2)", stored: true
+  end
+
+  create_table "test_stock_prices_intraday_adrian", id: false, force: :cascade do |t|
+    t.datetime "timestamp", precision: nil
+    t.text "symbol"
+    t.decimal "open"
+    t.decimal "high"
+    t.decimal "low"
+    t.decimal "close"
+    t.bigint "volume"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "username"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
