@@ -29,8 +29,11 @@ def store_data_to_db():
 
     # Pass the data to the Ruby script using execute_ruby_code
     execute_ruby_code('store_data.rb', data)
+    execute_ruby_code('add_new_computed_columns.rb', None)
     # parsed_result = json.loads(result)
     print("INSERT SUCCESS")
 
-store_data_to_db()
+# def compute_new_column():
 
+# store_data_to_db()
+execute_ruby_code('add_new_computed_columns.rb', None)
