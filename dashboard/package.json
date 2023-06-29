@@ -7,6 +7,7 @@
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.10.5",
     "esbuild": "^0.18.10",
+    "feather-icons": "^4.29.0",
     "jquery": "^3.7.0",
     "nodemon": "^2.0.22",
     "popper.js": "^1.16.1",
