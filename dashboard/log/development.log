@@ -54,3 +54,959 @@ Processing by Rails::WelcomeController#index as HTML
 Completed 200 OK in 690ms (Views: 65.7ms | ActiveRecord: 0.0ms | Allocations: 10739)
 
 
+Started GET "/" for 127.0.0.1 at 2023-06-27 14:09:04 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (59.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActionController::RoutingError (uninitialized constant LayoutsController):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 14:09:36 +0800
+  
+ActionController::RoutingError (uninitialized constant LayoutsController):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 14:11:10 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (79.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActionController::RoutingError (uninitialized constant LayoutsController):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 14:15:12 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (278.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /root/.rbenv/versions/3.0.1/lib/ruby/gems/3.0.0/gems/railties-7.0.5/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /root/.rbenv/versions/3.0.1/lib/ruby/gems/3.0.0/gems/railties-7.0.5/lib/rails/templates/rails/welcome/index.html.erb (Duration: 4.7ms | Allocations: 827)
+Completed 200 OK in 152ms (Views: 16.3ms | ActiveRecord: 0.0ms | Allocations: 7797)
+
+
+Started GET "/home" for 127.0.0.1 at 2023-06-27 14:15:30 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/home"):
+  
+Started GET "/home/index" for 127.0.0.1 at 2023-06-27 14:15:35 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 4.2ms | Allocations: 139)
+  Rendered layout layouts/application.html.erb (Duration: 1015.9ms | Allocations: 78574)
+Completed 200 OK in 1032ms (Views: 1025.5ms | ActiveRecord: 0.0ms | Allocations: 79877)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 14:16:12 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (195.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 10.5ms | Allocations: 458)
+  Rendered layout layouts/application.html.erb (Duration: 289.8ms | Allocations: 21885)
+Completed 200 OK in 379ms (Views: 309.3ms | ActiveRecord: 0.0ms | Allocations: 29026)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 14:40:48 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 7.5ms | Allocations: 160)
+  Rendered layout layouts/application.html.erb (Duration: 598.6ms | Allocations: 9553)
+Completed 500 Internal Server Error in 618ms (Allocations: 10759)
+
+
+  
+LoadError (cannot load such file -- sassc):
+  
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-06-27 14:45:17 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (877.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 10.8ms | Allocations: 479)
+  Rendered layout layouts/application.html.erb (Duration: 706.0ms | Allocations: 22699)
+Completed 200 OK in 804ms (Views: 726.1ms | ActiveRecord: 0.0ms | Allocations: 29840)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 14:53:10 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 7.2ms | Allocations: 190)
+  Rendered layout layouts/application.html.erb (Duration: 61.9ms | Allocations: 1813)
+Completed 200 OK in 81ms (Views: 73.0ms | Allocations: 3046)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 14:58:29 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 7)
+  Rendered layout layouts/application.html.erb (Duration: 174.6ms | Allocations: 3461)
+Completed 200 OK in 178ms (Views: 176.0ms | Allocations: 3786)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:01:30 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 7.2ms | Allocations: 189)
+  Rendered layout layouts/application.html.erb (Duration: 64.2ms | Allocations: 2037)
+Completed 200 OK in 84ms (Views: 75.7ms | Allocations: 3211)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:03:17 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 6.9ms | Allocations: 189)
+  Rendered layout layouts/application.html.erb (Duration: 56.6ms | Allocations: 1973)
+Completed 200 OK in 76ms (Views: 68.0ms | Allocations: 3163)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:03:29 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 5.6ms | Allocations: 189)
+  Rendered layout layouts/application.html.erb (Duration: 51.4ms | Allocations: 1975)
+Completed 200 OK in 70ms (Views: 61.4ms | Allocations: 3169)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:04:57 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 7.4ms | Allocations: 189)
+  Rendered layout layouts/application.html.erb (Duration: 57.9ms | Allocations: 1898)
+Completed 200 OK in 76ms (Views: 68.4ms | Allocations: 3088)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:05:44 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 7)
+  Rendered layout layouts/application.html.erb (Duration: 174.2ms | Allocations: 2672)
+Completed 200 OK in 178ms (Views: 175.3ms | Allocations: 2996)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:08:11 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 6.0ms | Allocations: 187)
+  Rendered layout layouts/application.html.erb (Duration: 73.9ms | Allocations: 1951)
+Completed 200 OK in 91ms (Views: 84.1ms | Allocations: 3125)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:13:57 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 8.2ms | Allocations: 331)
+  Rendered layout layouts/application.html.erb (Duration: 54.8ms | Allocations: 2035)
+Completed 200 OK in 73ms (Views: 65.0ms | Allocations: 3225)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-27 15:13:57 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:14:43 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (33.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 9.3ms | Allocations: 650)
+  Rendered layout layouts/application.html.erb (Duration: 716.5ms | Allocations: 25035)
+Completed 200 OK in 803ms (Views: 735.4ms | ActiveRecord: 0.0ms | Allocations: 32175)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-27 15:14:46 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:15:39 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 6.1ms | Allocations: 331)
+  Rendered layout layouts/application.html.erb (Duration: 43.3ms | Allocations: 1962)
+Completed 200 OK in 55ms (Views: 50.4ms | ActiveRecord: 0.0ms | Allocations: 3169)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-27 15:15:40 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:17:53 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 4.7ms | Allocations: 331)
+  Rendered layout layouts/application.html.erb (Duration: 39.8ms | Allocations: 1955)
+Completed 200 OK in 54ms (Views: 47.5ms | ActiveRecord: 0.0ms | Allocations: 3150)
+
+
+Started GET "/application.css" for 127.0.0.1 at 2023-06-27 15:17:53 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/application.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:19:52 +0800
+  
+ArgumentError (Missing :controller key on routes definition, please check your routes.):
+  
+config/routes.rb:3:in `block in <main>'
+config/routes.rb:1:in `<main>'
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:21:45 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 5.0ms | Allocations: 330)
+  Rendered layout layouts/application.html.erb (Duration: 40.0ms | Allocations: 1966)
+Completed 200 OK in 54ms (Views: 48.5ms | ActiveRecord: 0.0ms | Allocations: 3242)
+
+
+Started GET "/application.css" for 127.0.0.1 at 2023-06-27 15:21:45 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/application.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:25:03 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 7)
+  Rendered layout layouts/application.html.erb (Duration: 36.2ms | Allocations: 1172)
+Completed 200 OK in 40ms (Views: 38.3ms | ActiveRecord: 0.0ms | Allocations: 1497)
+
+
+Started GET "/application.css" for 127.0.0.1 at 2023-06-27 15:25:03 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/application.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:26:37 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (47.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 8.8ms | Allocations: 650)
+  Rendered layout layouts/application.html.erb (Duration: 1595.9ms | Allocations: 85239)
+Completed 200 OK in 1684ms (Views: 1614.9ms | ActiveRecord: 0.0ms | Allocations: 92379)
+
+
+Started GET "/application.css" for 127.0.0.1 at 2023-06-27 15:26:42 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/application.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:38:32 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (38.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 7.6ms | Allocations: 650)
+  Rendered layout layouts/application.html.erb (Duration: 23.1ms | Allocations: 5738)
+Completed 500 Internal Server Error in 102ms (ActiveRecord: 0.0ms | Allocations: 12832)
+
+
+  
+ActionView::Template::Error (undefined method `full_title' for #<ActionView::Base:0x0000000000af50>):
+    1: <!DOCTYPE html>
+    2: <html>
+    3:   <head>
+    4:     <title><%= full_title(yield(:title)) %></title>
+    5:     <%= stylesheet_link_tag 'application', media: 'all',
+    6:                                            'data-turbolinks-track' => true %>
+    7:     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  
+app/views/layouts/application.html.erb:4
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:39:20 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 4.5ms | Allocations: 330)
+  Rendered layout layouts/application.html.erb (Duration: 1980.8ms | Allocations: 93603)
+Completed 500 Internal Server Error in 1995ms (ActiveRecord: 0.0ms | Allocations: 94773)
+
+
+  
+ActionView::Template::Error (The asset "application.js" is not present in the asset pipeline.
+):
+    4:     <title>Financial Data Analysis</title>
+    5:     <%= stylesheet_link_tag 'application', media: 'all',
+    6:                                            'data-turbolinks-track' => true %>
+    7:     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    8:     <%= csrf_meta_tags %>
+    9:     <!--[if lt IE 9]>
+   10:       <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js">
+  
+app/views/layouts/application.html.erb:7
+Started GET "/" for 127.0.0.1 at 2023-06-27 15:42:35 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (33.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 9.0ms | Allocations: 650)
+  Rendered layout layouts/application.html.erb (Duration: 286.0ms | Allocations: 23363)
+Completed 200 OK in 373ms (Views: 306.6ms | ActiveRecord: 0.0ms | Allocations: 30504)
+
+
+Started GET "/application.css" for 127.0.0.1 at 2023-06-27 15:42:38 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/application.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:02:26 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (35.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 8.7ms | Allocations: 650)
+  Rendered layout layouts/application.html.erb (Duration: 52.6ms | Allocations: 4934)
+Completed 500 Internal Server Error in 131ms (ActiveRecord: 0.0ms | Allocations: 12028)
+
+
+  
+ActionView::Template::Error (The asset "application.css" is not present in the asset pipeline.
+):
+     6:     <%= csrf_meta_tags %>
+     7:     <%= csp_meta_tag %>
+     8: 
+     9:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:   </head>
+    11: 
+    12:   <body>
+  
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:03:08 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 6.1ms | Allocations: 133)
+  Rendered layout layouts/application.html.erb (Duration: 50.4ms | Allocations: 3290)
+Completed 500 Internal Server Error in 68ms (ActiveRecord: 0.0ms | Allocations: 4458)
+
+
+  
+ActionView::Template::Error (The asset "application.css" is not present in the asset pipeline.
+):
+     6:     <%= csrf_meta_tags %>
+     7:     <%= csp_meta_tag %>
+     8: 
+     9:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:   </head>
+    11: 
+    12:   <body>
+  
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:03:28 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (39.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 9.1ms | Allocations: 452)
+  Rendered layout layouts/application.html.erb (Duration: 58.7ms | Allocations: 4736)
+Completed 500 Internal Server Error in 150ms (ActiveRecord: 0.0ms | Allocations: 11830)
+
+
+  
+ActionView::Template::Error (The asset "application.css" is not present in the asset pipeline.
+):
+     6:     <%= csrf_meta_tags %>
+     7:     <%= csp_meta_tag %>
+     8: 
+     9:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:   </head>
+    11: 
+    12:   <body>
+  
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:03:57 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (43.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 11.8ms | Allocations: 452)
+  Rendered layout layouts/application.html.erb (Duration: 20.8ms | Allocations: 1344)
+Completed 200 OK in 109ms (Views: 40.9ms | ActiveRecord: 0.0ms | Allocations: 8491)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:04:12 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 4.9ms | Allocations: 132)
+  Rendered layout layouts/application.html.erb (Duration: 13.1ms | Allocations: 787)
+Completed 200 OK in 29ms (Views: 21.8ms | ActiveRecord: 0.0ms | Allocations: 2031)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:04:41 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (38.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 11.1ms | Allocations: 452)
+  Rendered layout layouts/application.html.erb (Duration: 63.6ms | Allocations: 4739)
+Completed 500 Internal Server Error in 169ms (ActiveRecord: 0.0ms | Allocations: 11833)
+
+
+  
+ActionView::Template::Error (The asset "application.css" is not present in the asset pipeline.
+):
+     6:     <%= csrf_meta_tags %>
+     7:     <%= csp_meta_tag %>
+     8: 
+     9:     <% stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:   </head>
+    11: 
+    12:   <body>
+  
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:05:33 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (43.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 10.6ms | Allocations: 452)
+  Rendered layout layouts/application.html.erb (Duration: 21.6ms | Allocations: 1334)
+Completed 200 OK in 111ms (Views: 41.9ms | ActiveRecord: 0.0ms | Allocations: 8481)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:15:34 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (39.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 11.0ms | Allocations: 452)
+  Rendered layout layouts/application.html.erb (Duration: 63.7ms | Allocations: 4817)
+Completed 500 Internal Server Error in 155ms (ActiveRecord: 0.0ms | Allocations: 11909)
+
+
+  
+ActionView::Template::Error (The asset "application.css" is not present in the asset pipeline.
+):
+     5:     <meta name="viewport" content="width=device-width,initial-scale=1">
+     6:     <%= csrf_meta_tags %>
+     7:     <%= csp_meta_tag %>
+     8:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+     9:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %> 
+    10:   </head>
+    11: 
+  
+app/views/layouts/application.html.erb:8
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:21:56 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (34.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 10.1ms | Allocations: 452)
+  Rendered layout layouts/application.html.erb (Duration: 63.3ms | Allocations: 4821)
+Completed 500 Internal Server Error in 157ms (ActiveRecord: 0.0ms | Allocations: 11913)
+
+
+  
+ActionView::Template::Error (The asset "application.css" is not present in the asset pipeline.
+):
+     6:     <%= csrf_meta_tags %>
+     7:     <%= csp_meta_tag %>
+     8:     
+     9:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %> 
+    11:   </head>
+    12: 
+  
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:22:25 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (38.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 9.8ms | Allocations: 452)
+  Rendered layout layouts/application.html.erb (Duration: 2087.0ms | Allocations: 37740)
+Completed 500 Internal Server Error in 2178ms (ActiveRecord: 0.0ms | Allocations: 44832)
+
+
+  
+ActionView::Template::Error (Error: File to import not found or unreadable: bootstrap/scss/bootstrap.
+        on line 1:1 of app/assets/stylesheets/application.bootstrap.scss
+>> @import 'bootstrap/scss/bootstrap';
+
+   ^
+):
+     6:     <%= csrf_meta_tags %>
+     7:     <%= csp_meta_tag %>
+     8: 
+     9:     <%= stylesheet_link_tag "application.bootstrap", "data-turbo-track": "reload" %>
+    10:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %> 
+    11:   </head>
+    12: 
+  
+app/assets/stylesheets/application.bootstrap.scss:1
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:23:46 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (41.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 10.8ms | Allocations: 452)
+  Rendered layout layouts/application.html.erb (Duration: 2188.9ms | Allocations: 113147)
+Completed 500 Internal Server Error in 2282ms (ActiveRecord: 0.0ms | Allocations: 120239)
+
+
+  
+ActionView::Template::Error (Asset `application.js` was not declared to be precompiled in production.
+Declare links to your assets in `app/assets/config/manifest.js`.
+
+  //= link application.js
+
+and restart your server):
+     7:     <%= csp_meta_tag %>
+     8: 
+     9:     <%# <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %> 
+    11:   </head>
+    12: 
+    13:   <body>
+  
+app/views/layouts/application.html.erb:10
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:31:34 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (47.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 9.6ms | Allocations: 452)
+  Rendered layout layouts/application.html.erb (Duration: 2229.2ms | Allocations: 36723)
+Completed 200 OK in 2321ms (Views: 2249.7ms | ActiveRecord: 0.0ms | Allocations: 43866)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:33:04 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 9.0ms | Allocations: 244)
+  Rendered layout layouts/application.html.erb (Duration: 70.1ms | Allocations: 3192)
+Completed 200 OK in 91ms (Views: 78.7ms | ActiveRecord: 0.0ms | Allocations: 4433)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:34:01 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (44.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 11.8ms | Allocations: 563)
+  Rendered layout layouts/application.html.erb (Duration: 74.0ms | Allocations: 4931)
+Completed 500 Internal Server Error in 180ms (ActiveRecord: 0.0ms | Allocations: 12024)
+
+
+  
+ActionView::Template::Error (The asset "application.css" is not present in the asset pipeline.
+):
+     6:     <%= csrf_meta_tags %>
+     7:     <%= csp_meta_tag %>
+     8: 
+     9:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %> 
+    11:   </head>
+    12: 
+  
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:34:45 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (43.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 13.6ms | Allocations: 563)
+  Rendered layout layouts/application.html.erb (Duration: 517.1ms | Allocations: 27248)
+Completed 500 Internal Server Error in 620ms (ActiveRecord: 0.0ms | Allocations: 34340)
+
+
+  
+ActionView::Template::Error (Error: File to import not found or unreadable: bootstrap/scss/bootstrap.
+        on line 1:1 of app/assets/stylesheets/application.bootstrap.scss
+>> @import 'bootstrap/scss/bootstrap';
+
+   ^
+):
+     6:     <%= csrf_meta_tags %>
+     7:     <%= csp_meta_tag %>
+     8: 
+     9:     <%= stylesheet_link_tag "application.bootstrap", "data-turbo-track": "reload" %>
+    10:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %> 
+    11:   </head>
+    12: 
+  
+app/assets/stylesheets/application.bootstrap.scss:1
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:37:22 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (39.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 11.5ms | Allocations: 563)
+  Rendered layout layouts/application.html.erb (Duration: 545.3ms | Allocations: 27281)
+Completed 500 Internal Server Error in 767ms (ActiveRecord: 0.0ms | Allocations: 34373)
+
+
+  
+ActionView::Template::Error (Error: File to import not found or unreadable: bootstrap/scss/bootstrap.
+        on line 1:1 of app/assets/stylesheets/application.bootstrap.scss
+>> @import 'bootstrap/scss/bootstrap';
+
+   ^
+):
+     6:     <%= csrf_meta_tags %>
+     7:     <%= csp_meta_tag %>
+     8: 
+     9:     <%= stylesheet_link_tag "application.bootstrap", "data-turbo-track": "reload" %>
+    10:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    11:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %> 
+    12:   </head>
+  
+app/assets/stylesheets/application.bootstrap.scss:1
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:38:06 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (46.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 10.2ms | Allocations: 563)
+  Rendered layout layouts/application.html.erb (Duration: 2872.5ms | Allocations: 68359)
+Completed 500 Internal Server Error in 2981ms (ActiveRecord: 0.0ms | Allocations: 75451)
+
+
+  
+ActionView::Template::Error (undefined method `builds_link_tag' for #<ActionView::Base:0x0000000000bd60>
+Did you mean?  build_tag_values):
+     7:     <%= csp_meta_tag %>
+     8: 
+     9:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    10:     <%= builds_link_tag "application", "data-turbo-track": "reload" %> 
+    11:   </head>
+    12: 
+    13:   <body>
+  
+app/views/layouts/application.html.erb:10
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:39:17 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (37.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 12.6ms | Allocations: 563)
+  Rendered layout layouts/application.html.erb (Duration: 777.3ms | Allocations: 30316)
+Completed 200 OK in 885ms (Views: 802.8ms | ActiveRecord: 0.0ms | Allocations: 37455)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:45:45 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (46.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 13.1ms | Allocations: 563)
+  Rendered layout layouts/application.html.erb (Duration: 2431.3ms | Allocations: 41455)
+Completed 200 OK in 2544ms (Views: 2456.7ms | ActiveRecord: 0.0ms | Allocations: 48593)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:46:35 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 8.3ms | Allocations: 253)
+  Rendered layout layouts/application.html.erb (Duration: 169.0ms | Allocations: 4632)
+Completed 200 OK in 195ms (Views: 179.5ms | ActiveRecord: 0.0ms | Allocations: 5873)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:46:46 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 7)
+  Rendered layout layouts/application.html.erb (Duration: 91.9ms | Allocations: 3888)
+Completed 200 OK in 97ms (Views: 93.1ms | ActiveRecord: 0.0ms | Allocations: 4217)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:46:51 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 7)
+  Rendered layout layouts/application.html.erb (Duration: 111.4ms | Allocations: 3886)
+Completed 200 OK in 119ms (Views: 113.1ms | ActiveRecord: 0.0ms | Allocations: 4195)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:49:27 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (44.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 13.3ms | Allocations: 572)
+  Rendered layout layouts/application.html.erb (Duration: 762.9ms | Allocations: 30253)
+Completed 200 OK in 880ms (Views: 788.4ms | ActiveRecord: 0.0ms | Allocations: 37392)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:51:24 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (34.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 12.3ms | Allocations: 572)
+  Rendered layout layouts/application.html.erb (Duration: 2474.6ms | Allocations: 42002)
+Completed 200 OK in 2585ms (Views: 2500.1ms | ActiveRecord: 0.0ms | Allocations: 49141)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:51:33 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 9)
+  Rendered layout layouts/application.html.erb (Duration: 94.4ms | Allocations: 3973)
+Completed 200 OK in 100ms (Views: 95.6ms | ActiveRecord: 0.0ms | Allocations: 4343)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:52:55 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (40.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 11.2ms | Allocations: 554)
+  Rendered layout layouts/application.html.erb (Duration: 804.7ms | Allocations: 30310)
+Completed 200 OK in 921ms (Views: 830.7ms | ActiveRecord: 0.0ms | Allocations: 37449)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:53:29 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 7.0ms | Allocations: 220)
+  Rendered layout layouts/application.html.erb (Duration: 140.3ms | Allocations: 4599)
+Completed 200 OK in 169ms (Views: 153.2ms | ActiveRecord: 0.0ms | Allocations: 5842)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:53:48 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (42.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 12.4ms | Allocations: 539)
+  Rendered layout layouts/application.html.erb (Duration: 808.4ms | Allocations: 30287)
+Completed 200 OK in 925ms (Views: 835.3ms | ActiveRecord: 0.0ms | Allocations: 37426)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:53:55 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 9)
+  Rendered layout layouts/application.html.erb (Duration: 120.1ms | Allocations: 4072)
+Completed 200 OK in 128ms (Views: 121.4ms | ActiveRecord: 0.0ms | Allocations: 4442)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:55:02 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (34.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 12.4ms | Allocations: 479)
+  Rendered layout layouts/application.html.erb (Duration: 777.8ms | Allocations: 30192)
+Completed 200 OK in 889ms (Views: 803.0ms | ActiveRecord: 0.0ms | Allocations: 37331)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-27 17:56:55 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (48.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 13.0ms | Allocations: 660)
+  Rendered layout layouts/application.html.erb (Duration: 2698.6ms | Allocations: 40621)
+Completed 200 OK in 2817ms (Views: 2723.8ms | ActiveRecord: 0.0ms | Allocations: 47759)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-27 17:57:00 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-27 18:00:16 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (40.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 12.2ms | Allocations: 656)
+  Rendered layout layouts/application.html.erb (Duration: 753.7ms | Allocations: 30395)
+Completed 200 OK in 864ms (Views: 777.0ms | ActiveRecord: 0.0ms | Allocations: 37534)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-27 18:00:19 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-29 10:42:33 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (33.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 384.6ms | Allocations: 662)
+  Rendered layout layouts/application.html.erb (Duration: 1997.7ms | Allocations: 30469)
+Completed 200 OK in 2303ms (Views: 2077.7ms | ActiveRecord: 0.0ms | Allocations: 37608)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-29 10:42:38 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-29 12:53:49 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (33.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 12.4ms | Allocations: 656)
+  Rendered layout layouts/application.html.erb (Duration: 922.5ms | Allocations: 30462)
+Completed 200 OK in 1038ms (Views: 952.3ms | ActiveRecord: 0.0ms | Allocations: 37601)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-29 12:53:51 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/dashboard" for 127.0.0.1 at 2023-06-29 12:54:06 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/dashboard"):
+  
+Started GET "/dashboard" for 127.0.0.1 at 2023-06-29 12:54:48 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/dashboard"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-29 12:55:58 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 9.1ms | Allocations: 500)
+  Rendered layout layouts/application.html.erb (Duration: 140.0ms | Allocations: 4906)
+Completed 200 OK in 165ms (Views: 152.8ms | ActiveRecord: 0.0ms | Allocations: 6182)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-29 12:55:59 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/home/dashboard" for 127.0.0.1 at 2023-06-29 12:56:10 +0800
+Processing by HomeController#dashboard as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 9.1ms | Allocations: 109)
+  Rendered layout layouts/application.html.erb (Duration: 126.8ms | Allocations: 3995)
+Completed 200 OK in 135ms (Views: 128.4ms | ActiveRecord: 0.0ms | Allocations: 4320)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-29 12:57:00 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 5.6ms | Allocations: 465)
+  Rendered layout layouts/application.html.erb (Duration: 117.2ms | Allocations: 4821)
+Completed 200 OK in 135ms (Views: 126.5ms | ActiveRecord: 0.0ms | Allocations: 6004)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-29 12:57:00 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-29 12:57:13 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 5.5ms | Allocations: 465)
+  Rendered layout layouts/application.html.erb (Duration: 110.6ms | Allocations: 4877)
+Completed 200 OK in 128ms (Views: 118.6ms | ActiveRecord: 0.0ms | Allocations: 6070)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-29 12:57:13 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/home/dashboard" for 127.0.0.1 at 2023-06-29 12:57:15 +0800
+Processing by HomeController#dashboard as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 5.6ms | Allocations: 108)
+  Rendered layout layouts/application.html.erb (Duration: 100.2ms | Allocations: 4037)
+Completed 200 OK in 106ms (Views: 101.3ms | ActiveRecord: 0.0ms | Allocations: 4360)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-29 12:57:56 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 7.7ms | Allocations: 524)
+  Rendered layout layouts/application.html.erb (Duration: 132.0ms | Allocations: 4879)
+Completed 200 OK in 153ms (Views: 140.6ms | ActiveRecord: 0.0ms | Allocations: 6054)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-29 12:57:56 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/" for 127.0.0.1 at 2023-06-29 12:57:58 +0800
+Processing by HomeController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 0.5ms | Allocations: 96)
+  Rendered layout layouts/application.html.erb (Duration: 121.3ms | Allocations: 3989)
+Completed 200 OK in 129ms (Views: 123.0ms | ActiveRecord: 0.0ms | Allocations: 4312)
+
+
+Started GET "/cover.css" for 127.0.0.1 at 2023-06-29 12:57:58 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/cover.css"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/dist/css/bootstrap.min.css"):
+  
+Started GET "/home/dashboard" for 127.0.0.1 at 2023-06-29 12:58:00 +0800
+Processing by HomeController#dashboard as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 7.3ms | Allocations: 108)
+  Rendered layout layouts/application.html.erb (Duration: 103.9ms | Allocations: 4033)
+Completed 200 OK in 110ms (Views: 105.0ms | ActiveRecord: 0.0ms | Allocations: 4339)
+
+
