@@ -16,7 +16,8 @@ drop column if exists percent_change cascade,
 drop column if exists change cascade,
 drop column if exists created_at,
 drop column if exists first_day_close,
-drop column if exists ytd;")
+drop column if exists ytd,
+drop column if exists year_month;")
 
 #add average_price column for daily
 conn.exec("alter table stock_prices_daily ADD COLUMN average_price numeric;")
@@ -59,7 +60,8 @@ FROM (
 conn.exec("ALTER TABLE stock_prices_daily ADD YTD numeric;")
 conn.exec("update stock_prices_daily set ytd = round(((close-first_day_close)/first_day_close)*100,3);")
 
-
+conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN year_month VARCHAR(10);")
+conn.exec("UPDATE stock_prices_daily SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")
 
 
 
