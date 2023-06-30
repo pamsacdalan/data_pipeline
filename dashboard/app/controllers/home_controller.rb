@@ -20,18 +20,37 @@ class HomeController < ApplicationController
     render 'daily'
   end
   
-  def weekly
-    @weekly_data = StockPricesWeekly.all
-    @weeklies = StockPricesWeekly.group(:symbol).select(:symbol).select("AVG(average_price) AS average_price").select("AVG(percent_change) AS percent_change")
-    
-    local_symbols = ['AAA', 'SM', 'TEL', 'GLO', 'UBP']
-    local_weekly = @weekly_data.select { |weekly_datum| local_symbols.include?(weekly_datum.symbol) }
 
-    international_symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA']
-    international_weekly = @weekly_data.select { |weekly_datum| international_symbols.include?(weekly_datum.symbol) }
+  def weekly
+    # Default: All companies
+    @weeklies = StockPricesWeekly.where(symbol: ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'AAA', 'SM', 'TEL', 'GLO', 'UBP']).group(:symbol).group(:symbol)
+    .select(:symbol)
+    .select("MAX(close) AS recent_close")
+    .select("AVG(percent_change) AS percent_change")
+
+    # Region Filter
+    if params[:filter].present?
+      case params[:filter]
+      when 'local'
+        @weeklies = @weeklies.where(symbol: ['AAA', 'SM', 'TEL', 'GLO', 'UBP']).group(:symbol).select(:symbol).select("MAX(close) AS recent_close").select("AVG(percent_change) AS percent_change")
+      when 'international'
+        @weeklies = @weeklies.where(symbol: ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA']).group(:symbol).select(:symbol).select("MAX(close) AS recent_close").select("AVG(percent_change) AS percent_change")
+      when 'all'
+        @weeklies = @weeklies.where(symbol: ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'AAA', 'SM', 'TEL', 'GLO', 'UBP']).group(:symbol).select(:symbol).select("MAX(close) AS recent_close").select("AVG(percent_change) AS percent_change")
+      end
+    end
+
+
+    symbol = params[:symbol]
+    @symbols = StockPricesWeekly.pluck(:symbol).uniq
+
+    if params[:symbol].present?
+      @selected_symbol = params[:symbol]
+      @selected_symbol_data = StockPricesWeekly.where(symbol: @selected_symbol).pluck(:year_month, :average_price)
+    else
+      @selected_symbol_data = StockPricesWeekly.pluck(:year_month, :average_price)
+    end
   
   end
 
-  
-  
 end
