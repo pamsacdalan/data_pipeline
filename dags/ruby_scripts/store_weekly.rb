@@ -13,7 +13,7 @@ hashes = hash_strings.map { |hash_string| eval(hash_string)}
 hashes.each do |hash|
 # Create table in the db if it doesn't exist
     if hash[:sched] == 'WEEKLY'
-        conn.exec('CREATE TABLE IF NOT EXISTS test_stock_prices_weekly_JASON (
+        conn.exec('CREATE TABLE IF NOT EXISTS stock_prices_weekly (
         timestamp TIMESTAMP,
         symbol TEXT,
         open NUMERIC,
@@ -25,14 +25,17 @@ hashes.each do |hash|
     
         timestamp = hash[:timestamp]
         symbol = hash[:symbol]
-        existing_data = conn.exec_params('SELECT COUNT(*) FROM test_stock_prices_weekly_JASON WHERE timestamp = $1 AND symbol = $2', [timestamp, symbol]).getvalue(0, 0).to_i
-        if existing_data.zero?
-        conn.exec_params('INSERT INTO test_stock_prices_weekly_JASON (timestamp, symbol, open, high, low, close, volume) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7)', 
-            [hash[:timestamp], hash[:symbol], hash[:open], hash[:high], hash[:low], hash[:close], hash[:volume]])
-        elsif existing_data == 1
-        conn.exec_params('UPDATE test_stock_prices_weekly_JASON SET open = $1, high = $2, low = $3, close = $4, volume = $5 WHERE timestamp = $6 AND symbol = $7', 
-            [hash[:open], hash[:high], hash[:low], hash[:close], hash[:volume], timestamp, symbol])
+        if timestamp.to_s >= '2010-01-01'
+          existing_data = conn.exec_params('SELECT COUNT(*) FROM stock_prices_weekly WHERE timestamp = $1 AND symbol = $2', [timestamp, symbol]).getvalue(0, 0).to_i
+    
+          if existing_data.zero?
+            conn.exec_params('INSERT INTO stock_prices_weekly (timestamp, symbol, open, high, low, close, volume) 
+              VALUES ($1, $2, $3, $4, $5, $6, $7)', 
+              [hash[:timestamp], hash[:symbol], hash[:open], hash[:high], hash[:low], hash[:close], hash[:volume]])
+          elsif existing_data == 1
+            conn.exec_params('UPDATE stock_prices_weekly SET open = $1, high = $2, low = $3, close = $4, volume = $5 WHERE timestamp = $6 AND symbol = $7', 
+              [hash[:open], hash[:high], hash[:low], hash[:close], hash[:volume], timestamp, symbol])
+          end
         end
     end
 end
