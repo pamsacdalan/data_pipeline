@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.88.1">
+  <title>Dashboard</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
+
+  <!-- Bootstrap core CSS -->
+  <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    /* Custom CSS for full and centered content */
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    .container-fluid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Company name</a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+          aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+  <div class="navbar-nav">
+    <div class="nav-item text-nowrap">
+      <a class="nav-link px-3" href="#">Sign out</a>
+    </div>
+  </div>
+</header>
+
+<div class="container-fluid">
+  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Dashboard</h1>
+    </div>
+
+    <!-- Add the filter options -->
+    <div class="d-flex justify-content-between">
+      <div class="form-group">
+        <label for="symbolFilter">Filter by Symbol:</label>
+        <select id="symbolFilter" class="form-control">
+          <option value="">All</option>
+          <option value="AAA">Asia Amalgamated Holdings Corp.</option>
+          <option value="AAPL">Apple Inc.</option>
+          <option value="AMZN">AMAZON.com, Inc.</option>
+          <option value="GLO">Globe Telecom, Inc.</option>
+          <option value="GOOGL">Alphabet Inc. (GOOGLE)</option>
+          <option value="MSFT">Microsoft Corporation</option>
+          <option value="SM">SM Investments Corporation</option>
+          <option value="TEL">PLDT, Inc.</option>
+          <option value="TSLA">TESLA, Inc.</option>
+          <option value="UBP">Union Bank of the Philippines</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <%= line_chart @chart_data %>
+      <%= bar_chart @chart_data, id: "barChart", discrete: true, xtitle: 'Average Price', ytitle: 'Year' %>
+    </div>
+
+    <!-- Add the legend for the symbols -->
+    <div id="chartLegend" class="d-flex justify-content-center flex-wrap mt-3"></div>
+
+  </main>
+</div>
+
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+<%= javascript_include_tag "chartkick" %>
+
+<script>
+  // Get references to the filter elements
+  const symbolFilter = document.getElementById('symbolFilter');
+
+  // Add event listener to the filter element
+  symbolFilter.addEventListener('change', function() {
+    const selectedSymbol = this.value;
+
+    // Call a function to update the graphs based on the selected symbol
+    updateGraphs(selectedSymbol);
+  });
+
+  function updateGraphs(symbol) {
+    // Make an AJAX request to fetch the data based on the selected symbol
+    fetch(`/api/data?symbol=${symbol}`)
+      .then(response => response.json())
+      .then(data => {
+        // Format the data for Chart.js
+        const labels = Object.keys(data);
+        const values = Object.values(data);
+        const formattedLabels = labels.map(label => {
+          const [year, month] = label.split('-');
+          return `${year}_${month}`;
+        });
+
+        // Generate dynamic colors for the symbols
+        const colors = generateColors(labels.length);
+
+        // Prepare datasets for line chart
+        const lineChartDatasets = [];
+        for (let i = 0; i < labels.length; i++) {
+          lineChartDatasets.push({
+            label: labels[i],
+            data: values[i],
+            fill: false,
+            borderColor: colors[i],
+            backgroundColor: colors[i],
+          });
+        }
+
+        // Prepare datasets for bar chart
+        const barChartDatasets = [];
+        for (let i = 0; i < labels.length; i++) {
+          barChartDatasets.push({
+            label: labels[i],
+            data: values[i],
+            backgroundColor: colors[i],
+          });
+        }
+
+        // Update line chart
+        const lineChartCtx = document.getElementById('lineChart').getContext('2d');
+        new Chart(lineChartCtx, {
+          type: 'line',
+          data: {
+            labels: formattedLabels,
+            datasets: lineChartDatasets,
+          },
+          options: {
+            // ...
+          },
+        });
+
+        // Update bar chart
+        const barChartCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barChartCtx, {
+          type: 'bar',
+          data: {
+            labels: formattedLabels,
+            datasets: barChartDatasets,
+          },
+          options: {
+            // ...
+          },
+        });
+
+        // Update legend
+        const legend = document.getElementById('chartLegend');
+        legend.innerHTML = '';
+        for (let i = 0; i < labels.length; i++) {
+          const symbolName = labels[i];
+          const symbolColor = colors[i];
+
+          const legendItem = document.createElement('div');
+          legendItem.innerHTML = `
+            <span class="legend-color" style="background-color: ${symbolColor}"></span>
+            <span class="legend-label">${symbolName}</span>
+          `;
+          legend.appendChild(legendItem);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  // Function to generate colors dynamically
+  function generateColors(count) {
+    const colors = [];
+    for (let i = 0; i < count; i++) {
+      const color = getRandomColor();
+      colors.push(color);
+    }
+    return colors;
+  }
+
+  // Function to generate a random color
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+</script>
+
+
+</body>
+</html>
