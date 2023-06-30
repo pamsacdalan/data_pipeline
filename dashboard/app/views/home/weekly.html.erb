@@ -89,85 +89,95 @@
       <!--Graphs-->
       <div class="container-fluid">
         <div class="container" style="padding: 0">
-            <div class="row">
-                <div class="col-9">
-                    <!-- Filter Dropdown for Company -->
-                    <div class="card" style="padding: 10px; margin-bottom: 10px; height: 100%">
-                        <div class="filter" style="text-align: center;">
-                            <div class="row">
-                                <div class="col-3" style="align-items: center;">
-                                    <label for="symbol-filter" style="display: flex; align-items: center;">Filter by Company:</label>
-                                    <%= form_tag({ action: "weekly" }, method: "get", class: "filter-form") do %>
-                                    <%= select_tag(:symbol, options_for_select(StockPricesWeekly.pluck(:symbol).uniq, params[:symbol]), include_blank: true, class: "form-control form-control-sm", id: "symbol-filter") %>
-                                </div>
-                                <div class="col-3" style="display: flex; align-items: flex-end;">
-                                    <%= submit_tag("Apply Filter", class: "btn btn-primary btn-sm") %>
-                                    <% end %>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="graph" style="text-align: center;">
-                             <% chart_options = { xtitle: "Year", ytitle: "Average Price", title: "Average Price per Year", 
-                                                  height: '400px', width: '750px', colors: ["AFEEEE"], library: { chartArea: { left: 70, top: 70, right: 0, bottom: 50 }} 
-                                                } %>
-                            <% if params[:symbol].present? %>
-                                <% selected_symbol_data = StockPricesWeekly.where(symbol: params[:symbol]).pluck(:year_month, :average_price) %>
-                                <%= area_chart selected_symbol_data, **chart_options %>
-                            <% else %>
-                                <%= area_chart StockPricesWeekly.pluck(:year_month, :average_price), **chart_options %>
-                            <% end %>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <!-- Filter Dropdown for Region -->
-                    <div class="filter">
+            <!-- Filter Dropdown for Company -->
+            <div class="card" style="padding: 20px">
+            <div class="filter" style="text-align: center;">
+                <div class="row">
+                    <div class="col" style="align-items: center;">
                         <div class="row">
-                            <div class="col-6" style="width: 130px">
-                                <label for="symbol-filter" style="display: flex; align-items: center;">Region:</label>
+                            <div class="col-3">
+                                <%# <label for="symbol-filter" style="display: flex; align-items: center;">Company:</label> %>
                                 <%= form_tag({ action: "weekly" }, method: "get", class: "filter-form") do %>
-                                <%= select_tag(:filter, options_for_select([['All', 'all'], ['Local', 'local'], ['International', 'international']], params[:filter]), class: "form-control form-control-sm") %>
+                                    <label for="symbol-filter" style="display: flex; align-items: center;">Region:</label>
+                                    <%= select_tag(:filter, options_for_select([['All', 'all'], ['Local', 'local'], ['International', 'international']], params[:filter]), class: "form-control form-control-sm") %>                                    
+                           </div>
+                            <div class="col-3">
+                                    <label for="symbol-filter" style="display: flex; align-items: center;">Year:</label>
+                                    <%= select_tag(:filter, options_for_select([], params[:filter]), class: "form-control form-control-sm") %>
                             </div>
-                            <div class="col-6" style="display: flex; align-items: flex-end;">
-                                <%= submit_tag("Apply Filter", class: "btn btn-primary btn-sm") %>
+                            <div class="col-3">
+                                    <label for="symbol-filter" style="display: flex; align-items: center;">Month:</label>
+                                    <%= select_tag(:filter, options_for_select([], params[:filter]), class: "form-control form-control-sm") %>
+                            </div>
+                            <div class="col-3" style="display: flex; align-items: flex-end;">
+                                    <%= submit_tag("Apply Filter", class: "btn btn-primary btn-sm") %>
                                 <% end %>
                             </div>
                         </div>
-                        <br>
                     </div>
+                </div>
+            </div>
+            </div>
 
+            <br>
+            <div class="row">
+                <div class="col-8">
+                    <div class="card" style="padding: 10px; height: 100%">
+                        <div class="graph" style="text-align: center; height: 100%">
+                            <% chart_options = {
+                                xtitle: "Year",
+                                ytitle: "Average Price",
+                                height: '100%',
+                                width: '100%',
+                                colors: ['#027F7F', '#13F9F9', '#83FCFC', '#04CFCF', '#039797'],
+                                library: {
+                                chartArea: { left: '10%', top: '20%', right: '10%', bottom: '10%' },
+                                legend: { position: 'top', alignment: 'center' },
+                                title: "Average Price per Year"
+                                }
+                            } %>
+                            <% symbols = StockPricesWeekly.distinct.pluck(:symbol) %>
+                            <% filtered_symbols = symbols & @stock_prices.pluck(:symbol) %>
+
+                            <% data = filtered_symbols.map do |symbol|
+                                { name: symbol, data: @charts.where(symbol: symbol).pluck(:year_month, :average_price).to_h }
+                            end %>
+                            <%= area_chart data, **chart_options %>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
                     <!-- Display Cards -->
-                    <div class="scrollable-content" style="overflow-y: auto; max-height: 400px;">
-                        <% @weeklies.each do |weekly| %>
+                    <div class="scrollable-content" style="overflow-y: auto; max-height: 500px;">
+                        <% @stock_prices.each do |stock_price| %>
                             <div class="card" style="padding: 12px; margin-bottom: 10px; margin-right: 10px">
                                 <div class="row">
                                     <div class="col-2" style="display: flex; align-items: center;">
-                                        <% image_filename = logo_filename_for_symbol(weekly.symbol) %>
+                                        <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
                                         <% if image_filename.present? %>
                                             <%= image_tag(image_filename, class: "company-logo", size: "30x30") %>
                                         <% end %>
                                     </div>
                                     <div class="col-6">
-                                        <%= weekly.symbol %> <br>
+                                        <%= stock_price.symbol %> <br>
                                         <% if params[:filter].in?(['local', 'all']) || params[:filter].blank? %>
-                                            <% if weekly.symbol.in?(['AAA', 'SM', 'TEL', 'GLO', 'UBP']) %>
-                                            <span style="font-size: 12px; font-weight: bold;"><%= weekly.recent_close.round(2) %></span> <span style="font-size: 12px;">PHP</span>
+                                            <% if stock_price.symbol.in?(['AAA', 'SM', 'TEL', 'GLO', 'UBP']) %>
+                                            <span style="font-size: 12px; font-weight: bold;"><%= stock_price.close.round(2) %></span> <span style="font-size: 12px;">PHP</span>
                                             <% else %>
-                                            <span style="font-size: 12px; font-weight: bold;"><%= weekly.recent_close.round(2) %></span> <span style="font-size: 12px;">USD</span>
+                                            <span style="font-size: 12px; font-weight: bold;"><%= stock_price.close.round(2) %></span> <span style="font-size: 12px;">USD</span>
                                             <% end %>
                                         <% elsif params[:filter].in?(['international']) %>
-                                            <span style="font-size: 12px; font-weight: bold;"><%= weekly.recent_close.round(2) %></span> <span style="font-size: 12px;">USD</span>
+                                            <span style="font-size: 12px; font-weight: bold;"><%= stock_price.close.round(2) %></span> <span style="font-size: 12px;">USD</span>
                                         <% end %>
                                     </div>
                                     <div class="col-4" style="display: flex; align-items: center;">
-                                        <% if weekly.percent_change.nil? %>
+                                        <% if stock_price.percent_change.nil? %>
                                             <span>No Data</span>
-                                        <% elsif weekly.percent_change < 0 %>
-                                        <span style="color: red; font-weight: bold; font-size: 15"><%= weekly.percent_change.round(2) %>%</span>
-                                            <% else %>
-                                        <span style="color: green; font-weight: bold; font-size: 15">+<%= weekly.percent_change.round(2) %>%</span>
-                                            <% end %>
+                                        <% elsif stock_price.percent_change < 0 %>
+                                            <span style="color: red; font-weight: bold; font-size: 15"><%= stock_price.percent_change.round(2) %>%</span>
+                                        <% else %>
+                                            <span style="color: green; font-weight: bold; font-size: 15">+<%= stock_price.percent_change.round(2) %>%</span>
+                                        <% end %>
                                     </div>
                                 </div>
                             </div>
