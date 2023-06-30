@@ -14,7 +14,8 @@ conn.exec("alter table stock_prices_weekly
 drop column if exists previous_value cascade, 
 drop column if exists percent_change cascade,
 drop column if exists change cascade,
-drop column if exists created_at;")
+drop column if exists created_at,
+drop column if exists year_month;")
 
 #add average_price column for weekly
 conn.exec("alter table stock_prices_weekly ADD COLUMN average_price numeric;")
@@ -39,7 +40,8 @@ WHERE stock_prices_weekly.symbol = subquery.symbol AND stock_prices_weekly.times
 conn.exec("alter table stock_prices_weekly ADD COLUMN percent_change numeric generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
 conn.exec("alter table stock_prices_weekly ADD COLUMN change numeric generated always AS (round(open - previous_value, 3)) stored;")
 
-
+conn.exec("ALTER TABLE stock_prices_weekly ADD COLUMN year_month VARCHAR(10);")
+conn.exec("UPDATE stock_prices_weekly SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")
 
 
 
