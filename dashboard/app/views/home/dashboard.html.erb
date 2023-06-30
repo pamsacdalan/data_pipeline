@@ -132,7 +132,7 @@
       <%# <canvas class="my-4 w-100" id="myChart" width="900" height="380">
 
       </canvas> %>
-      <%= pie_chart StockPricesDaily.group(:symbol).count %>
+      <%= area_chart StockPricesWeekly.group_by_week(:timestamp).count %>
 
     
 
