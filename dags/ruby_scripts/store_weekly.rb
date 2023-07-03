@@ -25,7 +25,7 @@ hashes.each do |hash|
     
         timestamp = hash[:timestamp]
         symbol = hash[:symbol]
-        if timestamp.to_s >= '2010-01-01'
+        if timestamp.to_s >= '2018-01-01'
           existing_data = conn.exec_params('SELECT COUNT(*) FROM stock_prices_weekly WHERE timestamp = $1 AND symbol = $2', [timestamp, symbol]).getvalue(0, 0).to_i
     
           if existing_data.zero?
