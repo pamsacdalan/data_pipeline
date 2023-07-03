@@ -7,19 +7,24 @@ conn = PG.connect(db_config)
 
 
 # Execute an SQL command to add the computed column
-conn.exec("alter table stock_prices_weekly drop column if exists average_price;")
+conn.exec("ALTER TABLE stock_prices_weekly DROP COLUMN IF EXISTS average_price;")
 
 #drop columns for stock_prices_weekly
-conn.exec("alter table stock_prices_weekly 
-drop column if exists previous_value cascade, 
-drop column if exists percent_change cascade,
-drop column if exists change cascade,
-drop column if exists created_at,
-drop column if exists year_month;")
+conn.exec("ALTER TABLE stock_prices_weekly 
+DROP COLUMN IF EXISTS previous_value cascade, 
+DROP COLUMN IF EXISTS percent_change cascade,
+DROP COLUMN IF EXISTS change cascade,
+DROP COLUMN IF EXISTS created_at,
+DROP COLUMN IF EXISTS year_month,
+DROP COLUMN IF EXISTS week_no,
+DROP COLUMN IF EXISTS timestamp_month,
+DROP COLUMN IF EXISTS timestamp_year,
+DROP COLUMN IF EXISTS company_name,
+DROP COLUMN IF EXISTS timestamp_date;")
 
 #add average_price column for weekly
-conn.exec("alter table stock_prices_weekly ADD COLUMN average_price numeric;")
-conn.exec("update stock_prices_weekly set average_price= ROUND((open + high + low + close) / 4,3);")
+conn.exec("ALTER TABLE stock_prices_weekly ADD COLUMN average_price numeric;")
+conn.exec("UPDATE stock_prices_weekly SET average_price= ROUND((open + high + low + close) / 4,3);")
 
 # #adding previous_value column to weekly
 conn.exec("ALTER TABLE stock_prices_weekly ADD COLUMN previous_value numeric;")
@@ -37,13 +42,37 @@ FROM (
 WHERE stock_prices_weekly.symbol = subquery.symbol AND stock_prices_weekly.timestamp = subquery.timestamp;")
 
 # # add computed columns for change & %_change weekly
-conn.exec("alter table stock_prices_weekly ADD COLUMN percent_change numeric generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
-conn.exec("alter table stock_prices_weekly ADD COLUMN change numeric generated always AS (round(open - previous_value, 3)) stored;")
+conn.exec("ALTER TABLE stock_prices_weekly ADD COLUMN percent_change numeric generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
+conn.exec("ALTER TABLE stock_prices_weekly ADD COLUMN change numeric generated always AS (round(open - previous_value, 3)) stored;")
 
 conn.exec("ALTER TABLE stock_prices_weekly ADD COLUMN year_month VARCHAR(10);")
 conn.exec("UPDATE stock_prices_weekly SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")
 
+conn.exec("ALTER TABLE stock_prices_weekly ADD COLUMN week_no text, ADD COLUMN timestamp_month text, ADD COLUMN timestamp_year text;")
+conn.exec("UPDATE stock_prices_weekly
+SET week_no = to_char(timestamp, 'W'),
+timestamp_month = to_char(timestamp, 'Month'),
+timestamp_year = to_char(timestamp, 'YYYY');")
 
+conn.exec("ALTER TABLE stock_prices_weekly ADD timestamp_date DATE;")
+conn.exec("UPDATE stock_prices_weekly SET timestamp_date = CAST(timestamp AS DATE);")
+
+conn.exec("ALTER TABLE stock_prices_weekly ADD COLUMN company_name TEXT;")
+conn.exec("UPDATE stock_prices_weekly
+SET company_name = 
+    CASE
+    WHEN symbol = 'AAPL' THEN 'Apple Inc.'
+    WHEN symbol = 'MSFT' THEN 'Microsoft Corporation'
+	WHEN symbol = 'GOOGL' THEN 'Alphabet Inc. (Google)'
+	WHEN symbol = 'AMZN' THEN 'Amazon.com Inc.'
+	WHEN symbol = 'TSLA' THEN 'Tesla Inc.'
+	WHEN symbol = 'AAA' THEN 'Asia Amalgamated Holdings Corp.'
+	WHEN symbol = 'SM' THEN 'SM Investments Corporation'
+	WHEN symbol = 'TEL' THEN 'PLDT, Inc.'
+	WHEN symbol = 'GLO' THEN 'Globe Telecom, Inc.'
+	WHEN symbol = 'UBP' THEN 'Union Bank of the Philippines'
+    ELSE ''
+    END;")
 
 
 conn.exec("SET TIME ZONE 'UTC-8';")

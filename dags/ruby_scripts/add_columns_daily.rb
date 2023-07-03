@@ -7,21 +7,23 @@ conn = PG.connect(db_config)
 
 
 # Execute an SQL command to add the computed column
-conn.exec("alter table stock_prices_daily drop column if exists average_price;")
+conn.exec("ALTER TABLE stock_prices_daily DROP COLUMN IF EXISTS average_price;")
 
 #drop columns for stock_prices_daily
-conn.exec("alter table stock_prices_daily 
-drop column if exists previous_value cascade, 
-drop column if exists percent_change cascade,
-drop column if exists change cascade,
-drop column if exists created_at,
-drop column if exists first_day_close,
-drop column if exists ytd,
-drop column if exists year_month;")
+conn.exec("ALTER TABLE stock_prices_daily 
+DROP COLUMN IF EXISTS previous_value cascade, 
+DROP COLUMN IF EXISTS percent_change cascade,
+DROP COLUMN IF EXISTS change cascade,
+DROP COLUMN IF EXISTS created_at,
+DROP COLUMN IF EXISTS first_day_close,
+DROP COLUMN IF EXISTS ytd,
+DROP COLUMN IF EXISTS year_month,
+DROP COLUMN IF EXISTS company_name,
+DROP COLUMN IF EXISTS timestamp_date;")
 
 #add average_price column for daily
-conn.exec("alter table stock_prices_daily ADD COLUMN average_price numeric;")
-conn.exec("update stock_prices_daily set average_price= ROUND((open + high + low + close) / 4,3);")
+conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN average_price numeric;")
+conn.exec("UPDATE stock_prices_daily SET average_price= ROUND((open + high + low + close) / 4,3);")
 
 #adding previous_value column to daily
 conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN previous_value numeric;")
@@ -39,8 +41,8 @@ FROM (
 WHERE stock_prices_daily.symbol = subquery.symbol AND stock_prices_daily.timestamp = subquery.timestamp;")
 
 # add computed columns for change & %_change
-conn.exec("alter table stock_prices_daily ADD COLUMN percent_change numeric generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
-conn.exec("alter table stock_prices_daily ADD COLUMN change numeric generated always AS (round(open - previous_value, 3)) stored;")
+conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN percent_change numeric generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
+conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN change numeric generated always AS (round(open - previous_value, 3)) stored;")
 
 ##
 conn.exec("ALTER TABLE stock_prices_daily ADD first_day_close numeric;")
@@ -58,10 +60,32 @@ FROM (
 ) AS t2 WHERE t1.symbol = t2.symbol;")
 
 conn.exec("ALTER TABLE stock_prices_daily ADD YTD numeric;")
-conn.exec("update stock_prices_daily set ytd = round(((close-first_day_close)/first_day_close)*100,3);")
+conn.exec("UPDATE stock_prices_daily SET ytd = round(((close-first_day_close)/first_day_close)*100,3);")
 
 conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN year_month VARCHAR(10);")
 conn.exec("UPDATE stock_prices_daily SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")
+
+conn.exec("ALTER TABLE stock_prices_daily ADD timestamp_date DATE;")
+conn.exec("UPDATE stock_prices_daily SET timestamp_date = CAST(timestamp AS DATE);")
+
+conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN company_name TEXT;")
+conn.exec("UPDATE stock_prices_daily
+SET company_name = 
+  CASE
+  WHEN symbol = 'AAPL' THEN 'Apple Inc.'
+  WHEN symbol = 'MSFT' THEN 'Microsoft Corporation'
+	WHEN symbol = 'GOOGL' THEN 'Alphabet Inc. (Google)'
+	WHEN symbol = 'AMZN' THEN 'Amazon.com Inc.'
+	WHEN symbol = 'TSLA' THEN 'Tesla Inc.'
+	WHEN symbol = 'AAA' THEN 'Asia Amalgamated Holdings Corp.'
+	WHEN symbol = 'SM' THEN 'SM Investments Corporation'
+	WHEN symbol = 'TEL' THEN 'PLDT, Inc.'
+	WHEN symbol = 'GLO' THEN 'Globe Telecom, Inc.'
+	WHEN symbol = 'UBP' THEN 'Union Bank of the Philippines'
+  ELSE ''
+  END;")
+
+
 
 
 
