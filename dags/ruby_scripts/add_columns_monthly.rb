@@ -17,7 +17,9 @@ DROP COLUMN IF EXISTS change cascade,
 DROP COLUMN IF EXISTS created_at,
 DROP COLUMN IF EXISTS year_month,
 DROP COLUMN IF EXISTS company_name,
-DROP COLUMN IF EXISTS timestamp_date;")
+DROP COLUMN IF EXISTS timestamp_date,
+DROP COLUMN IF EXISTS first_month_close, 
+DROP COLUMN IF EXISTS YTD;")
 
 #add average_price column for monthly
 conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN average_price numeric;")
@@ -41,6 +43,18 @@ WHERE stock_prices_monthly.symbol = subquery.symbol AND stock_prices_monthly.tim
 # add computed columns for change & %_change monthly
 conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN percent_change numeric generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
 conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN change numeric generated always AS (round(open - previous_value, 3)) stored;")
+
+conn.exec("ALTER TABLE stock_prices_monthly ADD first_month_close numeric, ADD YTD numeric;")
+conn.exec("UPDATE stock_prices_monthly
+SET first_month_close = (
+    SELECT close
+    FROM stock_prices_monthly AS t2
+    WHERE EXTRACT(YEAR FROM t2.timestamp) = EXTRACT(YEAR FROM stock_prices_monthly.timestamp)
+    ORDER BY symbol, t2.timestamp
+    LIMIT 1
+);")
+conn.exec("UPDATE stock_prices_monthly SET YTD = ROUND(((close - first_month_close) / first_month_close) * 100, 3);")
+
 
 conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN year_month VARCHAR(10);")
 conn.exec("UPDATE stock_prices_monthly SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")
