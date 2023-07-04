@@ -18,15 +18,17 @@ DROP COLUMN IF EXISTS timestamp_time;")
 conn.exec("ALTER TABLE stock_prices_intraday ADD COLUMN average_price numeric;")
 conn.exec("UPDATE stock_prices_intraday SET average_price= ROUND((open + high + low + close) / 4,3);")
 
+#add column for year_month ex."2023-Apr"
 conn.exec("ALTER TABLE stock_prices_intraday ADD COLUMN year_month VARCHAR(10);")
 conn.exec("UPDATE stock_prices_intraday SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")
 
+#add column for timestamp_date, timestamp_time
 conn.exec("ALTER TABLE stock_prices_intraday ADD timestamp_date DATE, ADD timestamp_time TIME;")
 conn.exec("UPDATE stock_prices_intraday
 SET timestamp_date = CAST(timestamp AS DATE),
     timestamp_time = CAST(timestamp AS TIME);")
 
-
+#add column for company name
 conn.exec("ALTER TABLE stock_prices_intraday ADD COLUMN company_name TEXT;")
 conn.exec("UPDATE stock_prices_intraday
 SET company_name = 
@@ -45,7 +47,7 @@ SET company_name =
     END;")
 
 
-
+#add column for created_at (date_time of insertion to db)
 conn.exec("SET TIME ZONE 'UTC-8';")
 conn.exec("ALTER TABLE stock_prices_intraday ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;")
 # Close the database connection

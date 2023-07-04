@@ -19,7 +19,10 @@ DROP COLUMN IF EXISTS first_day_close,
 DROP COLUMN IF EXISTS ytd,
 DROP COLUMN IF EXISTS year_month,
 DROP COLUMN IF EXISTS company_name,
-DROP COLUMN IF EXISTS timestamp_date;")
+DROP COLUMN IF EXISTS timestamp_date,
+DROP COLUMN IF EXISTS timestamp_year,
+DROP COLUMN IF EXISTS timestamp_month,
+DROP COLUMN IF EXISTS timestamp_day;")
 
 #add average_price column for daily
 conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN average_price numeric;")
@@ -28,7 +31,7 @@ conn.exec("UPDATE stock_prices_daily SET average_price= ROUND((open + high + low
 #adding previous_value column to daily
 conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN previous_value numeric;")
 
-# #inserting data to previous_value column daily
+#inserting data to previous_value column daily
 conn.exec("UPDATE stock_prices_daily
 SET previous_value = subquery.previous_value
 FROM (
@@ -44,7 +47,7 @@ WHERE stock_prices_daily.symbol = subquery.symbol AND stock_prices_daily.timesta
 conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN percent_change numeric generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
 conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN change numeric generated always AS (round(open - previous_value, 3)) stored;")
 
-##
+# add column for first_day_close (used for ytd computation)
 conn.exec("ALTER TABLE stock_prices_daily ADD first_day_close numeric;")
 conn.exec("UPDATE stock_prices_daily AS t1
 SET first_day_close = t2.close
@@ -59,15 +62,19 @@ FROM (
   GROUP BY symbol, close
 ) AS t2 WHERE t1.symbol = t2.symbol;")
 
+#add column for ytd
 conn.exec("ALTER TABLE stock_prices_daily ADD YTD numeric;")
 conn.exec("UPDATE stock_prices_daily SET ytd = round(((close-first_day_close)/first_day_close)*100,3);")
 
+#add column for year_month ex."2023-Apr"
 conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN year_month VARCHAR(10);")
 conn.exec("UPDATE stock_prices_daily SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")
 
+#add column for timestamp_date
 conn.exec("ALTER TABLE stock_prices_daily ADD timestamp_date DATE;")
 conn.exec("UPDATE stock_prices_daily SET timestamp_date = CAST(timestamp AS DATE);")
 
+#add column for company name
 conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN company_name TEXT;")
 conn.exec("UPDATE stock_prices_daily
 SET company_name = 
@@ -86,11 +93,18 @@ SET company_name =
   END;")
 
 
+#add columns for timestamp year, month, day
+conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN timestamp_day text, ADD COLUMN timestamp_month text, ADD COLUMN timestamp_year text;")
+conn.exec("UPDATE stock_prices_daily
+SET timestamp_day = EXTRACT(DAY FROM timestamp),
+timestamp_month = to_char(timestamp, 'Month'),
+timestamp_year = to_char(timestamp, 'YYYY');")
 
 
 
 
 
+#add column for created_at (date_time of insertion to db)
 conn.exec("SET TIME ZONE 'UTC-8';")
 conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;")
 # Close the database connection

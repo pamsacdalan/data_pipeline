@@ -19,7 +19,9 @@ DROP COLUMN IF EXISTS year_month,
 DROP COLUMN IF EXISTS company_name,
 DROP COLUMN IF EXISTS timestamp_date,
 DROP COLUMN IF EXISTS first_month_close, 
-DROP COLUMN IF EXISTS YTD;")
+DROP COLUMN IF EXISTS YTD,
+DROP COLUMN IF EXISTS timestamp_month, 
+DROP COLUMN IF EXISTS timestamp_year;")
 
 #add average_price column for monthly
 conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN average_price numeric;")
@@ -44,6 +46,7 @@ WHERE stock_prices_monthly.symbol = subquery.symbol AND stock_prices_monthly.tim
 conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN percent_change numeric generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
 conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN change numeric generated always AS (round(open - previous_value, 3)) stored;")
 
+#add column for first_month_close and ytd
 conn.exec("ALTER TABLE stock_prices_monthly ADD first_month_close numeric, ADD YTD numeric;")
 conn.exec("UPDATE stock_prices_monthly
 SET first_month_close = (
@@ -55,13 +58,15 @@ SET first_month_close = (
 );")
 conn.exec("UPDATE stock_prices_monthly SET YTD = ROUND(((close - first_month_close) / first_month_close) * 100, 3);")
 
-
+#add column for year_month ex."2023-Apr"
 conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN year_month VARCHAR(10);")
 conn.exec("UPDATE stock_prices_monthly SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")
 
+#add column for timestamp_date ex. "2023-04-28"
 conn.exec("ALTER TABLE stock_prices_monthly ADD timestamp_date DATE;")
 conn.exec("UPDATE stock_prices_monthly SET timestamp_date = CAST(timestamp AS DATE);")
 
+#add column name for company name
 conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN company_name TEXT;")
 conn.exec("UPDATE stock_prices_monthly
 SET company_name = 
@@ -79,6 +84,14 @@ SET company_name =
     ELSE ''
     END;")
 
+#add columns for timestamp year, month
+conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN timestamp_month text, ADD COLUMN timestamp_year text;")
+conn.exec("UPDATE stock_prices_monthly
+SET timestamp_month = to_char(timestamp, 'Month'),
+timestamp_year = to_char(timestamp, 'YYYY');")
+
+
+#add column for created_at (date_time of insertion to db)
 conn.exec("SET TIME ZONE 'UTC-8';")
 conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;")
 # Close the database connection
