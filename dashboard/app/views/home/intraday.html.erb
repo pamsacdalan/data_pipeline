@@ -86,8 +86,8 @@
         <div class="container">
           <div class="row">
             <div class="col">
-              <h3>Stock Market - Weekly</h3>
-              <p class="subtitle">Returns weekly data (last trading day of each week, weekly open, weekly high, weekly low, weekly close) </p>
+              <h3>Stock Market - Intraday</h3>
+              <p class="subtitle">Intraday series covering extended trading hours where applicable</p>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@
             <% @stock_prices.each do |stock_price| %>
               <div class="col-3 mover-card">
                 <div class="row">
-                  <div class="col-5">
+                  <div class="col-6">
                     <div class="movers-text">
                       <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
                       <% if image_filename.present? %>
@@ -107,14 +107,8 @@
                       <span><%= stock_price.symbol %></span>
                     </div>
                   </div>
-                  <div class="col-5 movers-value-usd" style="color: green; text-align: left;">
-                      <% if stock_price.percent_change.nil? %>
-                        <span>No Data</span>
-                      <% elsif stock_price.percent_change < 0 %>
-                        <span style="color: red; font-weight: bold; font-size: 15"><%= stock_price.percent_change.round(3) %>%</span>
-                      <% else %>
-                        <span style="color: green; font-weight: bold; font-size: 15">+<%= stock_price.percent_change.round(3) %>%</span>
-                      <% end %>
+                  <div class="col-6 movers-value-usd" style="color: green; text-align: left;">
+                      <%= stock_price.close.round(2) %> USD
                   </div>
                 </div>
               </div>
@@ -124,60 +118,40 @@
       <br><br>
       <!--Graphs-->
       <div class="container" style="padding: 0">
-        <div class="row">
-          <div class="col-6">
+          <div class="col">
             <div class="card" style="padding: 10px; height: 100%">
               <br>
               <div class="row">
                 <div class="col" style="margin-left: 15px; text-align: left; align-items: center;">
-                  <h5>Weekly Prices</h5>
-                  <p class="subtitle"> Closing price of each company</p>
+                  <h6>Intraday Prices</h6>
                 </div>
                 <div class="col">
-                  <%= form_tag({ action: "weekly" }, method: "get", class: "filter-form", id: "filter-form") do %>
+                  <%= form_tag({ action: "intraday" }, method: "get", class: "filter-form", id: "filter-form") do %>
                       <div style="display: flex; align-items: center;">
-                        <%= select_tag(:company_weekly, options_for_select(@companies, params[:company_weekly]), include_blank: 'All', class: "form-control form-control-sm", style: "width: 80px; margin-left: auto;", onchange: "this.form.submit();") %>
+                        <%= select_tag(:company_intraday, options_for_select(@companies, params[:company_intraday]), include_blank: 'All', class: "form-control form-control-sm", style: "width: 150px; margin-left: auto;", onchange: "this.form.submit();") %>
                       </div>
                   <% end %>
                 </div>
               </div>
               <br>
-
-              <div id="column_chart" style="text-align: center; height: 100%">
-
-                <% chart_options = {
-                    min: nil,
-                    ytitle: 'Closing Price',
-                    library: {
-                        chartArea: { left: '10%', top: '20%', right: '10%', bottom: '10%' }, 
-                            }
+              <div id="chart" style="text-align: center; height: 100%">
+                            <% chart_options = {
+                                ytitle: "Closing Price",
+                                min: nil,
+                                library: {
+                                chartArea: { left: '10%', top: '20%', right: '10%', bottom: '10%' },
+                                }
                             } %>
 
                 <%= column_chart @data, **chart_options %>
+
               </div>
-                                          
             </div>
           </div>
-          <div class="col-6">
-            <div class="card" style="padding: 10px; height: 100%">
-                <br>
-                <div class="row">
-                  <div class="col" style="margin-left: 15px; text-align: left; align-items: center;">
-                    <h5>Price Movement</h5>
-                    <p class="subtitle"> Shows the average %change of each company throughout the year </p>
-                  </div>
-                </div>
-                <br>
-                <div id="line_chart" style="text-align: center; height: 100%">
-                  <%= line_chart @series_data, min: nil, ytitle: 'Average % Change', chartArea: { left: '10%', top: '20%', right: '10%', bottom: '10%' }, discrete: true  %>
-                </div>                                 
-            </div>
-          </div>
-        </div>      
-        <br>
+          <br>
           <div class="col">
             <div class="card" style="padding: 10px; height: 100%">
-              <div id="price_table" style="text-align: center; height: 100%">
+              <div id="price_chart" style="text-align: center; height: 100%">
                   <table class="table table-sm table-striped ml-6">
                         <thead>
                             <tr>
@@ -187,8 +161,6 @@
                                 <th style="text-align: right">OPEN</th>
                                 <th style="text-align: right">CLOSE</th>
                                 <th style="text-align: right">VOLUME</th>
-                                <th style="text-align: right">CHG</th>
-                                <th style="text-align: right">%CHG</th>
                             </tr>
                         </thead>
 
@@ -206,15 +178,6 @@
                                     <td style="text-align: right"><%= stock_price.open.round(3) %></td>
                                     <td style="text-align: right"><%= stock_price.close.round(3) %></td>
                                     <td style="text-align: right"><%= stock_price.volume %></td>
-                                    <td style="text-align: right"><%= stock_price.change.round(3) %></td>
-                                    <td style="text-align: right"><% if stock_price.percent_change.nil? %>
-                                                                    <span>No Data</span>
-                                                                  <% elsif stock_price.percent_change < 0 %>
-                                                                    <span style="color: red; font-weight: bold; font-size: 15"><%= stock_price.percent_change.round(3) %>%</span>
-                                                                  <% else %>
-                                                                    <span style="color: green; font-weight: bold; font-size: 15">+<%= stock_price.percent_change.round(3) %>%</span>
-                                                                  <% end %>
-                                    </td>
                                 </tr>
                             <% end %>
                         </tbody>
@@ -222,10 +185,9 @@
                     </table>
               </div>
             </div>
-          </div>
-        <br>
+          </div>  
+        <br><br>
       </div>
-      <br>
     </main>
 </body>
 </html>
