@@ -1,213 +1,241 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-  <meta name="generator" content="Hugo 0.88.1">
-  <title>Dashboard</title>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Dashboard</title>
 
-  <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.8.1/slick.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.slick/1.8.1/slick.min.js"></script>
 
-  <!-- Bootstrap core CSS -->
-  <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <style>
-    .bd-placeholder-img {
-      font-size: 1.125rem;
-      text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
-    }
+    
 
-    @media (min-width: 768px) {
-      .bd-placeholder-img-lg {
-        font-size: 3.5rem;
+    <!-- Bootstrap core CSS -->
+<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
       }
-    }
 
-    /* Custom CSS for full and centered content */
-    html, body {
-      height: 100%;
-      margin: 0;
-    }
-
-    .container-fluid {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Dashboard</a>
-</header>
-
-<div class="container-fluid">
-  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Dashboard</h1>
-    </div>
-
-    <!-- Add the filter options -->
-    <div class="d-flex justify-content-between">
-      <div class="form-group">
-        <label for="symbolFilter">Filter by Symbol:</label>
-        <select id="symbolFilter" class="form-control">
-          <option value="">All</option>
-          <option value="AAA">Asia Amalgamated Holdings Corp.</option>
-          <option value="AAPL">Apple Inc.</option>
-          <option value="AMZN">AMAZON.com, Inc.</option>
-          <option value="GLO">Globe Telecom, Inc.</option>
-          <option value="GOOGL">Alphabet Inc. (GOOGLE)</option>
-          <option value="MSFT">Microsoft Corporation</option>
-          <option value="SM">SM Investments Corporation</option>
-          <option value="TEL">PLDT, Inc.</option>
-          <option value="TSLA">TESLA, Inc.</option>
-          <option value="UBP">Union Bank of the Philippines</option>
-          <!-- Add more options as needed -->
-        </select>
-      </div>
-    </div>
-
-    <div class="chart-container">
-      <%= line_chart @chart_data %>
-      <%= bar_chart @chart_data, id: "barChart", discrete: true, xtitle: 'Average Price', ytitle: 'Year' %>
-    </div>
-
-    <!-- Add the legend for the symbols -->
-    <div id="chartLegend" class="d-flex justify-content-center flex-wrap mt-3"></div>
-
-  </main>
-</div>
-
-<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-<%= javascript_include_tag "chartkick" %>
-
-<script>
-  // Get references to the filter elements
-  const symbolFilter = document.getElementById('symbolFilter');
-
-  // Add event listener to the filter element
-  symbolFilter.addEventListener('change', function() {
-    const selectedSymbol = this.value;
-
-    // Call a function to update the graphs based on the selected symbol
-    updateGraphs(selectedSymbol);
-  });
-
-  function updateGraphs(symbol) {
-    // Make an AJAX request to fetch the data based on the selected symbol
-    fetch(`/api/data?symbol=${symbol}`)
-      .then(response => response.json())
-      .then(data => {
-        // Format the data for Chart.js
-        const labels = Object.keys(data);
-        const values = Object.values(data);
-        const formattedLabels = labels.map(label => {
-          const [year, month] = label.split('-');
-          return `${year}_${month}`;
-        });
-
-        // Generate dynamic colors for the symbols
-        const colors = generateColors(labels.length);
-
-        // Prepare datasets for line chart
-        const lineChartDatasets = [];
-        for (let i = 0; i < labels.length; i++) {
-          lineChartDatasets.push({
-            label: labels[i],
-            data: values[i],
-            fill: false,
-            borderColor: colors[i],
-            backgroundColor: colors[i],
-          });
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
         }
+      }
 
-        // Prepare datasets for bar chart
-        const barChartDatasets = [];
-        for (let i = 0; i < labels.length; i++) {
-          barChartDatasets.push({
-            label: labels[i],
-            data: values[i],
-            backgroundColor: colors[i],
-          });
+      .filter label,
+      .filter .form-control {
+        font-size: 0.875rem; 
+      }
+    
+      .filter .col-1 {
+        width: 10%; 
+      }
+
+
+      
+
+      .mover-card {
+        animation: horizontalScroll 5s infinite linear;
+      }
+      
+      @keyframes horizontalScroll {
+        0% {
+          transform: translateX(0%);
         }
-
-        // Update line chart
-        const lineChartCtx = document.getElementById('lineChart').getContext('2d');
-        new Chart(lineChartCtx, {
-          type: 'line',
-          data: {
-            labels: formattedLabels,
-            datasets: lineChartDatasets,
-          },
-          options: {
-            // ...
-          },
-        });
-
-        // Update bar chart
-        const barChartCtx = document.getElementById('barChart').getContext('2d');
-        new Chart(barChartCtx, {
-          type: 'bar',
-          data: {
-            labels: formattedLabels,
-            datasets: barChartDatasets,
-          },
-          options: {
-            // ...
-          },
-        });
-
-        // Update legend
-        const legend = document.getElementById('chartLegend');
-        legend.innerHTML = '';
-        for (let i = 0; i < labels.length; i++) {
-          const symbolName = labels[i];
-          const symbolColor = colors[i];
-
-          const legendItem = document.createElement('div');
-          legendItem.innerHTML = `
-            <span class="legend-color" style="background-color: ${symbolColor}"></span>
-            <span class="legend-label">${symbolName}</span>
-          `;
-          legend.appendChild(legendItem);
+        100% {
+          transform: translateX(-100%);
         }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
+      }
+      
+      
+    </style>
 
-  // Function to generate colors dynamically
-  function generateColors(count) {
-    const colors = [];
-    for (let i = 0; i < count; i++) {
-      const color = getRandomColor();
-      colors.push(color);
-    }
-    return colors;
-  }
+    
+    <!-- Custom styles for this template -->
+    
+    <link href="dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+  <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <%= link_to "DASHBOARD", root_path, class: "navbar-brand col-md-3 col-lg-2 me-0 px-3" %>
+  </header>
 
-  // Function to generate a random color
-  function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-</script>
+    <div class="container-fluid">
+      <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+          <div class="position-sticky pt-3">
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Stock Prices</span>
+              <a class="link-secondary" href="#" aria-label="Add a new report">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <%= link_to "Intraday", root_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Daily", daily_path, class: "nav-link" %>
+                  <span data-feather="shopping-cart"></span>
+              </li>
+              <li class="nav-item active">
+                <%= link_to "Weekly", weekly_path, class: "nav-link" %>
+                  <span data-feather="users"></span>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Monthly", monthly_path, class: "nav-link" %>
+                  <span data-feather="bar-chart-2"></span>
+              </li>
+            </ul>
+          </div>
+        </nav>
 
 
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <h3>Stock Market - Daily</h3>
+                <p class="subtitle">Returns data for closing price, high price, low price, open price, closing price, change, and percent change daily</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        
+        <!-- Display Cards Moving-->
+        <div class="container" style="overflow-x: hidden">
+            <div class="row" style="flex-wrap: nowrap;">
+              <% @stock_prices.each do |stock_price| %>
+                <div class="col-3 mover-card">
+                  <div class="row">
+                    <div class="col-5">
+                      <div class="movers-text">
+                        <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
+                        <% if image_filename.present? %>
+                          <%= image_tag(image_filename, class: "company-logo", size: "20x20", style: "margin-right: 5px;") %>
+                        <% end %>
+                        <span><%= stock_price.symbol %></span>
+                      </div>
+                    </div>
+                    <div class="col-5 movers-value-usd" style="color: green; text-align: left;">
+                        <% if stock_price.percent_change.nil? %>
+                          <span>No Data</span>
+                        <% elsif stock_price.percent_change < 0 %>
+                          <span style="color: red; font-weight: bold; font-size: 15"><%= stock_price.percent_change.round(3) %>%</span>
+                        <% else %>
+                          <span style="color: green; font-weight: bold; font-size: 15">+<%= stock_price.percent_change.round(3) %>%</span>
+                        <% end %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+        </div> 
+        <br><br>
+        
+
+
+                        <!-- Display Chart -->
+                        <div class="container" style="padding: 0">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="card" style="padding: 10px; height: 100%">
+                                <br>
+                                <div class="row">
+                                  <div class="col" style="margin-left: 15px; text-align: left; align-items: center;">
+                                    <h5>Daily Prices</h5>
+                                    <p class="subtitle">Closing price of each company in Daily</p>
+                                  </div>
+                                  <div class="col">
+                                    <%= form_tag({ action: "daily" }, method: "get", class: "filter-form", id: "filter-form") do %>
+                                      <div style="display: flex; align-items: center;">
+                                        <%= select_tag(:company_daily, options_for_select(@companies, params[:company_daily]), include_blank: 'All', class: "form-control form-control-sm", style: "width: 80px; margin-left: auto;", onchange: "this.form.submit();") %>
+                                      </div>
+                                    <% end %>
+                                  </div>
+                                </div>
+                                <br>
+
+                                <!-- Add a wrapper div for the chart -->
+                                <div id="column_chart" style="text-align: center; height: 100%">
+                                  <%= column_chart @data, library: { chart: { zoomType: 'x' } } %>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <br>
+                        </div>
+
+
+
+                    
+              
+                        <!-- Display Table -->
+                        <br>
+                        <div class="col">
+                          <div class="card" style="padding: 10px; height: 100%">
+                            <div id="price_table" style="text-align: center; height: 100%">
+                                <table class="table table-sm table-striped ml-6">
+                                      <thead>
+                                          <tr>
+                                              <th style="text-align: left">COMPANIES</th>
+                                              <th style="text-align: right">HIGH</th>
+                                              <th style="text-align: right">LOW</th>
+                                              <th style="text-align: right">OPEN</th>
+                                              <th style="text-align: right">CLOSE</th>
+                                              <th style="text-align: right">CHG</th>
+                                              <th style="text-align: right">%CHG</th>
+                                          </tr>
+                                      </thead>
+              
+                                      <tbody>
+                                          <% @stock_prices.each do |stock_price| %>
+                                              <tr>
+                                                  <td style="text-align: left;">
+                                                    <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
+                                                      <% if image_filename.present? %>
+                                                        <%= image_tag(image_filename, class: "company-logo", size: "20x20", style: "margin-right: 5px;") %>
+                                                      <% end %><%= stock_price.company_name %>
+                                                  </td>
+                                                  <td style="text-align: right"><%= stock_price.high.round(3) %></td>
+                                                  <td style="text-align: right"><%= stock_price.low.round(3) %></td>
+                                                  <td style="text-align: right"><%= stock_price.open.round(3) %></td>
+                                                  <td style="text-align: right"><%= stock_price.close.round(3) %></td>
+                                                  <td style="text-align: right"><%= stock_price.change.round(3) %></td>
+                                                  <td style="text-align: right"><% if stock_price.percent_change.nil? %>
+                                                                                  <span>No Data</span>
+                                                                                <% elsif stock_price.percent_change < 0 %>
+                                                                                  <span style="color: red; font-weight: bold; font-size: 15"><%= stock_price.percent_change.round(3) %>%</span>
+                                                                                <% else %>
+                                                                                  <span style="color: green; font-weight: bold; font-size: 15">+<%= stock_price.percent_change.round(3) %>%</span>
+                                                                                <% end %>
+                                                  </td>
+                                              </tr>
+                                          <% end %>
+                                      </tbody>
+              
+                                  </table>
+                            </div>
+                          </div>
+                        </div>
+                </div>
+            </div>      
+            <br>
+
+        </main>
 </body>
 </html>
