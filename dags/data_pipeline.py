@@ -18,6 +18,10 @@ dag = DAG('data_pipeline',
 current_folder = os.path.dirname(__file__)
 
 def connect_to_slack(message, task_name=None, **kwargs):
+    """
+    Connects to Slack and posts a message to a specified channel using the SlackAPIPostOperator.
+    
+    """
     channel = '#data_pipeline'
     slack_http_id = 'slack_data_pipeline'
     token = Variable.get('slack_token')
@@ -33,10 +37,18 @@ def connect_to_slack(message, task_name=None, **kwargs):
     return slack_operator.execute(context=kwargs)
 
 def send_slack_notification(task_name, success=True, **kwargs):
+    """
+    Sends a Slack notification indicating whether a task was executed successfully or encountered an error.
+    
+    """
     message = "Task: {} executed successfully".format(task_name) if success else "Task: {} encountered an error".format(task_name)
     connect_to_slack(message=message, task_name=task_name)
 
 def execute_ruby_code(ruby_file, input_data=None, task_name=None):
+    """
+    Executes a Ruby code file and returns the result or raises an exception if an error occurs.
+    
+    """
     try:
         if input_data is None:
             process = subprocess.Popen(['ruby', ruby_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -56,6 +68,10 @@ def execute_ruby_code(ruby_file, input_data=None, task_name=None):
         raise e
 
 def fetch_data_from_api(**kwargs):
+    """
+    Fetches data from an API using a Ruby script and returns the fetched data.
+    
+    """
     fetch_data_path = os.path.join(current_folder, 'ruby_scripts', 'fetch_data.rb')
     fetched_data = execute_ruby_code(ruby_file=fetch_data_path, input_data=None, task_name='fetch_data_from_api')
     send_slack_notification('fetch_data_from_api', success=True, **kwargs)
@@ -71,6 +87,10 @@ fetch_data_task = PythonOperator(
 
 # Will check connection to database
 def check_conn(**kwargs):
+    """
+    Checks the connection to a database using a Ruby script.
+    
+    """
     test_db_path = os.path.join(current_folder, 'ruby_scripts', 'test_db.rb')
     execute_ruby_code(test_db_path, None, task_name='check_db_connection')
     send_slack_notification('check_db_connection', success=True, **kwargs)
@@ -92,6 +112,10 @@ store_db_dict = {
 				}
 
 def store_data_to_db(ruby_script, task_name, **kwargs):
+    """
+    Stores data to a database using a Ruby script.
+    
+    """
     fetched_data = kwargs['ti'].xcom_pull(task_ids='fetch_data_from_api')
     execute_ruby_code(ruby_script, fetched_data, task_name=task_name)
     send_slack_notification(task_name, success=True, **kwargs)
@@ -122,6 +146,10 @@ add_cols_dict = {
 				}
 
 def add_computed_columns_to_table(ruby_script, task_name, **kwargs):
+    """
+    Adds new computed columns to a database table using a Ruby script.
+    
+    """
     execute_ruby_code(ruby_script, task_name=task_name)
     send_slack_notification(task_name, success=True, **kwargs)
     return task_name
@@ -138,6 +166,10 @@ for task_name, params in add_cols_dict.items():
 
 # Will send notification to Slack App
 def send_success_notification(task_name, **kwargs):
+    """
+    Sends a success notification to a Slack App.
+    
+    """
     sched = task_name.split('_')[0]
     message = "{} data stored successfully".format(sched.title())
     connect_to_slack(message=message, task_name=task_name)
