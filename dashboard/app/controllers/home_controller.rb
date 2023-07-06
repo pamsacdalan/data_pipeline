@@ -9,7 +9,7 @@ class HomeController < ApplicationController
       GROUP BY symbol
     )").all
 
-    @intra_stock_prices = StockPricesIntraday.all
+    @intra_stock_prices = StockPricesIntraday.order(timestamp: :asc).all
     @companies = StockPricesIntraday.distinct.pluck(:symbol) # get all companies
 
     
@@ -58,7 +58,7 @@ class HomeController < ApplicationController
     company = params[:company_weekly]
 
     # Data for the area-chart
-    @weekly_stock_prices = StockPricesWeekly.all
+    @weekly_stock_prices = StockPricesWeekly.order(timestamp: :asc).all
     @companies = StockPricesWeekly.distinct.pluck(:symbol) # get all companies
 
     
