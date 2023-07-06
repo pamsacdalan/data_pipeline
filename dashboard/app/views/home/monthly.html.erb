@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Dashboard</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
+
+    
+
+    <!-- Bootstrap core CSS -->
+<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .filter label,
+      .filter .form-control {
+        font-size: 0.875rem; /* Adjust the font size to make it smaller */
+      }
+    
+      .filter .col-1 {
+        width: 10%; /* Adjust the width to make the columns smaller */
+      }
+
+
+
+      .mover-card {
+        animation: horizontalScroll 5s infinite linear;
+      }
+      
+      @keyframes horizontalScroll {
+        0% {
+          transform: translateX(0%);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+      
+      
+
+      .graph {
+        text-align: center;
+        height: 100%;
+      }
+
+      .graph-container {
+        padding: 10px;
+        height: 100%;
+      }
+
+      @media (min-width: 768px) {
+        .graph-container {
+          width: 50%; /* Adjust the width as needed */
+        }
+      }
+
+
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+    
+  <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <%= link_to "DASHBOARD", root_path, class: "navbar-brand col-md-3 col-lg-2 me-0 px-3" %>
+  </header>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3">
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Stock Prices</span>
+          <a class="link-secondary" href="#" aria-label="Add a new report">
+            <span data-feather="plus-circle"></span>
+          </a>
+        </h6>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <%= link_to "Intraday", intraday_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Daily", daily_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item active">
+             <%= link_to "Weekly", weekly_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Monthly", monthly_path, class: "nav-link" %>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h3>Stock Market - Monthly</h3>
+        <p class="subtitle">Returns monthly data for year-to-date and percent change </p>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<!-- Display Cards Moving-->
+<div class="container" style="overflow-x: hidden">
+    <div class="row" style="flex-wrap: nowrap;">
+      <% @stock_prices.each do |stock_price| %>
+        <div class="col-3 mover-card">
+          <div class="row">
+            <div class="col-5">
+              <div class="movers-text">
+                <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
+                <% if image_filename.present? %>
+                  <%= image_tag(image_filename, class: "company-logo", size: "20x20", style: "margin-right: 5px;") %>
+                <% end %>
+                <span><%= stock_price.symbol %></span>
+              </div>
+            </div>
+            <div class="col-5 movers-value-usd" style="color: green; text-align: left;">
+                <% if stock_price.percent_change.nil? %>
+                  <span>No Data</span>
+                <% elsif stock_price.percent_change < 0 %>
+                  <span style="color: red; font-weight: bold; font-size: 15"><%= stock_price.percent_change.round(3) %>%</span>
+                <% else %>
+                  <span style="color: green; font-weight: bold; font-size: 15">+<%= stock_price.percent_change.round(3) %>%</span>
+                <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+</div> 
+<br><br>
+      
+    
+            
+            <!-- 1st graph -->
+            <div class="container" style="padding: 0">
+            <div class="row">
+              <div class="col-6">
+                <div class="card" style="padding: 10px; height: 100%">
+                  <br>
+                  <div class="row">
+                    <div class="col" style="margin-left: 15px; text-align: left; align-items: center;">
+                      <h5>Monthly Prices</h5>
+                      <p class="subtitle"> Year to Date (YTD) price of each company</p>
+                    </div>
+                    <div class="col">
+                      <%= form_tag({ action: "monthly" }, method: "get", class: "filter-form", id: "filter-form") do %>
+                          <div style="display: flex; align-items: center;">
+                            <%= select_tag(:company_monthly, options_for_select(@companies, params[:company_monthly]), include_blank: 'All', class: "form-control form-control-sm", style: "width: 80px; margin-left: auto;", onchange: "this.form.submit();") %>
+                          </div>
+                      <% end %>
+                    </div>
+                  </div>
+                  <br>  
+            <div id="column_chart" style="text-align: center; height: 100%">
+            <% chart_options = {
+                min: nil,
+                ytitle: 'Year-to-Date Price',
+                library: {
+                    chartArea: { left: '10%', top: '20%', right: '10%', bottom: '10%' }, 
+                        }
+                        } %>
+            <%= column_chart @data, **chart_options %>
+          </div>                      
+        </div>
+      </div>
+
+      
+      <div class="col-6">
+        <div class="card" style="padding: 10px; height: 100%">
+            <br>
+            <!-- 2nd graph -->
+            <div class="row">
+              <div class="col" style="margin-left: 15px; text-align: left; align-items: center;">
+                <h5>Percent Change Price</h5>
+                <p class="subtitle"> Shows the average %change of each company throughout the year </p>
+              </div>
+            </div>
+            <br>
+            <div id="line_chart" style="text-align: center; height: 100%">
+              <%= line_chart @series_data, min: nil, ytitle: 'Percent Change', chartArea: { left: '10%', top: '20%', right: '10%', bottom: '10%' }, discrete: true  %>
+            </div>                                 
+        </div>
+      </div>
+    </div>      
+        </div>
+          
+        <br>
+
+    </main>
+
+    
+</body>
+</html>

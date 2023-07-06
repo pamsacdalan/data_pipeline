@@ -23,12 +23,23 @@ DROP COLUMN IF EXISTS YTD,
 DROP COLUMN IF EXISTS timestamp_month, 
 DROP COLUMN IF EXISTS timestamp_year;")
 
+#add columns to db
+conn.exec("ALTER TABLE stock_prices_monthly 
+ADD COLUMN average_price NUMERIC,
+ADD COLUMN previous_value NUMERIC,
+ADD COLUMN first_month_close NUMERIC,
+ADD COLUMN YTD NUMERIC,
+ADD COLUMN year_month VARCHAR(10),
+ADD COLUMN timestamp_date DATE,
+ADD COLUMN company_name TEXT,
+ADD COLUMN timestamp_month text,
+ADD COLUMN timestamp_year text;")
+
+
+
 #add average_price column for monthly
-conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN average_price numeric;")
 conn.exec("UPDATE stock_prices_monthly SET average_price= ROUND((open + high + low + close) / 4,3);")
 
-#adding previous_value column to monthly
-conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN previous_value numeric;")
 
 #inserting data to previous_value column monthly
 conn.exec("UPDATE stock_prices_monthly
@@ -43,11 +54,10 @@ FROM (
 WHERE stock_prices_monthly.symbol = subquery.symbol AND stock_prices_monthly.timestamp = subquery.timestamp;")
 
 # add computed columns for change & %_change monthly
-conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN percent_change numeric generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
-conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN change numeric generated always AS (round(open - previous_value, 3)) stored;")
+conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN percent_change NUMERIC generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
+conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN change NUMERIC generated always AS (round(open - previous_value, 3)) stored;")
 
 #add column for first_month_close and ytd
-conn.exec("ALTER TABLE stock_prices_monthly ADD first_month_close numeric, ADD YTD numeric;")
 conn.exec("UPDATE stock_prices_monthly
 SET first_month_close = (
     SELECT close
@@ -59,33 +69,29 @@ SET first_month_close = (
 conn.exec("UPDATE stock_prices_monthly SET YTD = ROUND(((close - first_month_close) / first_month_close) * 100, 3);")
 
 #add column for year_month ex."2023-Apr"
-conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN year_month VARCHAR(10);")
 conn.exec("UPDATE stock_prices_monthly SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")
 
 #add column for timestamp_date ex. "2023-04-28"
-conn.exec("ALTER TABLE stock_prices_monthly ADD timestamp_date DATE;")
 conn.exec("UPDATE stock_prices_monthly SET timestamp_date = CAST(timestamp AS DATE);")
 
 #add column name for company name
-conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN company_name TEXT;")
 conn.exec("UPDATE stock_prices_monthly
 SET company_name = 
-    CASE
-    WHEN symbol = 'AAPL' THEN 'Apple Inc.'
-    WHEN symbol = 'MSFT' THEN 'Microsoft Corporation'
+  CASE
+  WHEN symbol = 'AAPL' THEN 'Apple Inc.'
+  WHEN symbol = 'MSFT' THEN 'Microsoft Corporation'
 	WHEN symbol = 'GOOGL' THEN 'Alphabet Inc. (Google)'
 	WHEN symbol = 'AMZN' THEN 'Amazon.com Inc.'
 	WHEN symbol = 'TSLA' THEN 'Tesla Inc.'
-	WHEN symbol = 'AAA' THEN 'Asia Amalgamated Holdings Corp.'
-	WHEN symbol = 'SM' THEN 'SM Investments Corporation'
-	WHEN symbol = 'TEL' THEN 'PLDT, Inc.'
-	WHEN symbol = 'GLO' THEN 'Globe Telecom, Inc.'
-	WHEN symbol = 'UBP' THEN 'Union Bank of the Philippines'
-    ELSE ''
-    END;")
+	WHEN symbol = 'JNJ' THEN 'Johnson & Johnson'
+	WHEN symbol = 'JPM' THEN 'JPMorgan Chase & Co.'
+	WHEN symbol = 'PG' THEN 'Procter & Gamble Co.'
+	WHEN symbol = 'V' THEN 'Visa Inc.'
+	WHEN symbol = 'KO' THEN 'The Coca-Cola Company '
+  ELSE ''
+  END;")
 
 #add columns for timestamp year, month
-conn.exec("ALTER TABLE stock_prices_monthly ADD COLUMN timestamp_month text, ADD COLUMN timestamp_year text;")
 conn.exec("UPDATE stock_prices_monthly
 SET timestamp_month = to_char(timestamp, 'Month'),
 timestamp_year = to_char(timestamp, 'YYYY');")
