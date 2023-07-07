@@ -116,36 +116,117 @@
         </div>
         <br>
         
+        
+        
         <!-- Display Cards Moving-->
         <div class="container" style="overflow-x: hidden">
-            <div class="row" style="flex-wrap: nowrap;">
-              <% @stock_prices.each do |stock_price| %>
-                <div class="col-3 mover-card">
-                  <div class="row">
-                    <div class="col-5">
-                      <div class="movers-text">
-                        <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
-                        <% if image_filename.present? %>
-                          <%= image_tag(image_filename, class: "company-logo", size: "20x20", style: "margin-right: 5px;") %>
-                        <% end %>
-                        <span><%= stock_price.symbol %></span>
+          <div class="row" style="flex-wrap: nowrap;">
+            <div class="col-1">
+              <button class="carousel-btn carousel-left-btn" id="carousel-left-btn" onmouseover="startAutoScroll('left')" onmouseout="stopAutoScroll()"></button>
+            </div>
+            <div class="col-10">
+              <div class="carousel-container">
+                <% @stock_prices.each do |stock_price| %>
+                  <div class="col-3 mover-card">
+                    <div class="row">
+                      <div class="col-5">
+                        <div class="movers-text" style="font-size: 14px;">
+                          <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
+                          <% if image_filename.present? %>
+                            <%= image_tag(image_filename, class: "company-logo", size: "14x14", style: "margin-right: 5px;") %>
+                          <% end %>
+                          <span><%= stock_price.symbol %></span>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-5 movers-value-usd" style="color: green; text-align: left;">
+                      <div class="col-5 movers-value-usd" style="color: green; text-align: left;">
                         <% if stock_price.percent_change.nil? %>
                           <span>No Data</span>
                         <% elsif stock_price.percent_change < 0 %>
-                          <span style="color: red; font-weight: bold; font-size: 15"><%= stock_price.percent_change.round(3) %>%</span>
+                          <span style="color: red; font-weight: bold; font-size: 14px;"><%= stock_price.percent_change.round(3) %>%</span>
                         <% else %>
-                          <span style="color: green; font-weight: bold; font-size: 15">+<%= stock_price.percent_change.round(3) %>%</span>
+                          <span style="color: green; font-weight: bold; font-size: 14px;">+<%= stock_price.percent_change.round(3) %>%</span>
                         <% end %>
+                      </div>
                     </div>
                   </div>
-                </div>
-              <% end %>
+                <% end %>
+              </div>
             </div>
-        </div> 
-        <br><br>
+            <div class="col-1">
+              <button class="carousel-btn carousel-right-btn" id="carousel-right-btn" onmouseover="startAutoScroll('right')" onmouseout="stopAutoScroll()"></button>
+            </div>
+          </div>
+        </div>
+        
+        <style>
+        .carousel-btn {
+          width: 30px;
+          height: 30px;
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
+          opacity: 0.2;
+          transition: opacity 0.3s ease;
+        }
+        
+        .carousel-left-btn::before,
+        .carousel-right-btn::before {
+          content: "";
+          display: inline-block;
+          width: 0;
+          height: 0;
+          border-style: solid;
+        }
+        
+        .carousel-left-btn::before {
+          border-width: 8px 5px 8px 0;
+          border-color: transparent #000000 transparent transparent;
+          transform: rotate(1deg); 
+        }
+        
+        .carousel-right-btn::before {
+          border-width: 8px 0 8px 5px; 
+          border-color: transparent transparent transparent #000000;
+          transform: rotate(-1deg); 
+        }
+        
+        .carousel-container {
+          display: flex;
+          overflow-x: auto;
+          scroll-behavior: smooth;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        
+        .carousel-container::-webkit-scrollbar {
+          display: none;
+        }
+        </style>
+        
+        <script>
+        let scrollIntervalId;
+        
+        function startAutoScroll(direction) {
+          const container = document.querySelector('.carousel-container');
+          const cardWidth = document.querySelector('.mover-card').offsetWidth;
+          const scrollDistance = direction === 'left' ? -cardWidth : cardWidth;
+        
+          scrollIntervalId = setInterval(() => {
+            container.scrollBy({
+              top: 0,
+              left: scrollDistance,
+              behavior: 'smooth'
+            });
+          }, 1000);
+        }
+        
+        function stopAutoScroll() {
+          clearInterval(scrollIntervalId);
+        }
+        </script>
+        
+        
+        <br>
         
 
 
