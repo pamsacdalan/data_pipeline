@@ -5,41 +5,39 @@ require_relative 'config'
 db_config = Config::DB_CONFIG
 conn = PG.connect(db_config)
 
+conn.exec("SET TIME ZONE 'UTC-8';")
 
-#drop columns for stock_prices_daily
-conn.exec("ALTER TABLE stock_prices_daily 
-DROP COLUMN IF EXISTS average_price,
-DROP COLUMN IF EXISTS previous_value cascade, 
-DROP COLUMN IF EXISTS percent_change cascade,
-DROP COLUMN IF EXISTS change cascade,
-DROP COLUMN IF EXISTS created_at,
-DROP COLUMN IF EXISTS first_day_close,
-DROP COLUMN IF EXISTS ytd,
-DROP COLUMN IF EXISTS year_month,
-DROP COLUMN IF EXISTS company_name,
-DROP COLUMN IF EXISTS timestamp_date,
-DROP COLUMN IF EXISTS timestamp_year,
-DROP COLUMN IF EXISTS timestamp_month,
-DROP COLUMN IF EXISTS timestamp_day;")
-
-#add columns to stock_prices_daily
-conn.exec("ALTER TABLE stock_prices_daily 
-ADD COLUMN average_price NUMERIC,
-ADD COLUMN previous_value NUMERIC,
-ADD COLUMN first_day_close NUMERIC,
-ADD COLUMN YTD NUMERIC,
-ADD COLUMN year_month VARCHAR(10),
-ADD COLUMN timestamp_date DATE,
-ADD COLUMN company_name TEXT,
-ADD COLUMN timestamp_day TEXT,
-ADD COLUMN timestamp_month TEXT,
-ADD COLUMN timestamp_year TEXT;")
+#add columns to stock_prices_daily if the necessary (fetched) columns exist
+conn.exec("DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns 
+    WHERE table_name = 'stock_prices_daily' AND 
+    column_name IN ('timestamp', 'symbol', 'open', 'high', 'low', 'close', 'volume')
+  ) THEN
+    ALTER TABLE stock_prices_daily
+    ADD COLUMN IF NOT EXISTS average_price NUMERIC,
+    ADD COLUMN IF NOT EXISTS previous_value NUMERIC,
+    ADD COLUMN IF NOT EXISTS percent_change NUMERIC,
+	  ADD COLUMN IF NOT EXISTS change NUMERIC,
+    ADD COLUMN IF NOT EXISTS first_day_close NUMERIC,
+    ADD COLUMN IF NOT EXISTS YTD NUMERIC,
+    ADD COLUMN IF NOT EXISTS year_month VARCHAR(10),
+    ADD COLUMN IF NOT EXISTS timestamp_date DATE,
+    ADD COLUMN IF NOT EXISTS timestamp_day TEXT,
+    ADD COLUMN IF NOT EXISTS timestamp_month TEXT,
+    ADD COLUMN IF NOT EXISTS timestamp_year text,
+    ADD COLUMN IF NOT EXISTS company_name TEXT,
+	  ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+  END IF;
+END $$;")
 
 
-#add data to average_price column for daily
+#add/update data to average_price column for daily
 conn.exec("UPDATE stock_prices_daily SET average_price= ROUND((open + high + low + close) / 4,3);")
 
-#inserting data to previous_value column daily
+#add/update data to previous_value column daily
 conn.exec("UPDATE stock_prices_daily
 SET previous_value = subquery.previous_value
 FROM (
@@ -51,11 +49,11 @@ FROM (
 ) AS subquery
 WHERE stock_prices_daily.symbol = subquery.symbol AND stock_prices_daily.timestamp = subquery.timestamp;")
 
-# add computed columns for change & %_change
-conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN percent_change NUMERIC generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
-conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN change NUMERIC generated always AS (round(open - previous_value, 3)) stored;")
+# add/update data for percent_change and change columns
+conn.exec("UPDATE stock_prices_daily SET percent_change = round((open - previous_value) / previous_value * 100, 3)")
+conn.exec("UPDATE stock_prices_daily SET change = round(open - previous_value, 3)")
 
-# add data to column for first_day_close (used for ytd computation)
+# add/update data to column for first_day_close (used for ytd computation)
 conn.exec("UPDATE stock_prices_daily AS t1
 SET first_day_close = t2.close
 FROM (
@@ -69,16 +67,16 @@ FROM (
   GROUP BY symbol, close
 ) AS t2 WHERE t1.symbol = t2.symbol;")
 
-#add year-to-date data to column ytd
+#add/update ytd column
 conn.exec("UPDATE stock_prices_daily SET ytd = round(((close-first_day_close)/first_day_close)*100,3);")
 
-#add data to column for year_month ex."2023-Apr"
+#add/update data to column for year_month ex."2023-Apr"
 conn.exec("UPDATE stock_prices_daily SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")
 
-#add data to column for timestamp_date
+#add/update data to column for timestamp_date
 conn.exec("UPDATE stock_prices_daily SET timestamp_date = CAST(timestamp AS DATE);")
 
-#add data to column for company name
+#add/update data to company name column
 conn.exec("UPDATE stock_prices_daily
 SET company_name = 
   CASE
@@ -96,18 +94,13 @@ SET company_name =
   END;")
 
 
-#add data to columns for timestamp year, month, day
+#add/update data to timestamp year, month, day amd created_at columns
 conn.exec("UPDATE stock_prices_daily
 SET timestamp_day = EXTRACT(DAY FROM timestamp),
 timestamp_month = to_char(timestamp, 'Month'),
-timestamp_year = to_char(timestamp, 'YYYY');")
+timestamp_year = to_char(timestamp, 'YYYY'),
+created_at = CURRENT_TIMESTAMP;")
 
 
-
-
-
-#add column for created_at (date_time of insertion to db)
-conn.exec("SET TIME ZONE 'UTC-8';")
-conn.exec("ALTER TABLE stock_prices_daily ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;")
 # Close the database connection
 conn.close

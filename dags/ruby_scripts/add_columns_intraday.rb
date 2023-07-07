@@ -5,22 +5,26 @@ require_relative 'config'
 db_config = Config::DB_CONFIG
 conn = PG.connect(db_config)
 
+conn.exec("SET TIME ZONE 'UTC-8';")
 
-# Execute an SQL command to add the computed column
-conn.exec("ALTER TABLE stock_prices_intraday DROP COLUMN IF EXISTS average_price,
-DROP COLUMN IF EXISTS created_at,
-DROP COLUMN IF EXISTS year_month,
-DROP COLUMN IF EXISTS company_name,
-DROP COLUMN IF EXISTS timestamp_date,
-DROP COLUMN IF EXISTS timestamp_time;")
-
-#add columns to db
-conn.exec("ALTER TABLE stock_prices_intraday 
-ADD COLUMN average_price NUMERIC,
-ADD COLUMN year_month VARCHAR(10),
-ADD COLUMN timestamp_date DATE,
-ADD COLUMN timestamp_time TIME,
-ADD COLUMN company_name TEXT;")
+#add columns to stock_prices_intraday if the necessary (fetched) columns exist
+conn.exec("DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns 
+    WHERE table_name = 'stock_prices_intraday' AND 
+    column_name IN ('timestamp', 'symbol', 'open', 'high', 'low', 'close', 'volume')
+  ) THEN
+    ALTER TABLE stock_prices_intraday
+    ADD COLUMN IF NOT EXISTS average_price NUMERIC,
+    ADD COLUMN IF NOT EXISTS year_month VARCHAR(10),
+    ADD COLUMN IF NOT EXISTS timestamp_date DATE,
+    ADD COLUMN IF NOT EXISTS timestamp_time TEXT,
+    ADD COLUMN IF NOT EXISTS company_name TEXT,
+	ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+  END IF;
+END $$;")
 
 #add data to average_price column for intraday
 conn.exec("UPDATE stock_prices_intraday SET average_price= ROUND((open + high + low + close) / 4,3);")
@@ -31,7 +35,8 @@ conn.exec("UPDATE stock_prices_intraday SET year_month = CONCAT(EXTRACT(YEAR FRO
 #add data to columns for timestamp_date, timestamp_time
 conn.exec("UPDATE stock_prices_intraday
 SET timestamp_date = CAST(timestamp AS DATE),
-    timestamp_time = CAST(timestamp AS TIME);")
+    timestamp_time = CAST(timestamp AS TIME),
+	created_at = CURRENT_TIMESTAMP;")
 
 #add data to column for company name
 conn.exec("UPDATE stock_prices_intraday
@@ -50,9 +55,5 @@ SET company_name =
   ELSE ''
   END;")
 
-
-#add column for created_at (date_time of insertion to db)
-conn.exec("SET TIME ZONE 'UTC-8';")
-conn.exec("ALTER TABLE stock_prices_intraday ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;")
 # Close the database connection
 conn.close

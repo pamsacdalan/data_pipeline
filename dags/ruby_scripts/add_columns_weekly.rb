@@ -5,39 +5,36 @@ require_relative 'config'
 db_config = Config::DB_CONFIG
 conn = PG.connect(db_config)
 
+conn.exec("SET TIME ZONE 'UTC-8';")
 
-# Execute an SQL command to add the computed column
-conn.exec("ALTER TABLE stock_prices_weekly DROP COLUMN IF EXISTS average_price;")
+#add columns to stock_prices_weekly if the necessary (fetched) columns exist
+conn.exec("DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns 
+    WHERE table_name = 'stock_prices_weekly' AND 
+    column_name IN ('timestamp', 'symbol', 'open', 'high', 'low', 'close', 'volume')
+  ) THEN
+    ALTER TABLE stock_prices_weekly
+    ADD COLUMN IF NOT EXISTS average_price NUMERIC,
+    ADD COLUMN IF NOT EXISTS previous_value NUMERIC,
+    ADD COLUMN IF NOT EXISTS percent_change NUMERIC,
+	  ADD COLUMN IF NOT EXISTS change NUMERIC,
+    ADD COLUMN IF NOT EXISTS year_month VARCHAR(10),
+    ADD COLUMN IF NOT EXISTS week_no TEXT,
+    ADD COLUMN IF NOT EXISTS timestamp_year text,
+    ADD COLUMN IF NOT EXISTS timestamp_month TEXT,
+    ADD COLUMN IF NOT EXISTS timestamp_date DATE,    
+    ADD COLUMN IF NOT EXISTS company_name TEXT,
+	  ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+  END IF;
+END $$;")
 
-#drop columns for stock_prices_weekly
-conn.exec("ALTER TABLE stock_prices_weekly 
-DROP COLUMN IF EXISTS previous_value cascade, 
-DROP COLUMN IF EXISTS percent_change cascade,
-DROP COLUMN IF EXISTS change cascade,
-DROP COLUMN IF EXISTS created_at,
-DROP COLUMN IF EXISTS year_month,
-DROP COLUMN IF EXISTS week_no,
-DROP COLUMN IF EXISTS timestamp_month,
-DROP COLUMN IF EXISTS timestamp_year,
-DROP COLUMN IF EXISTS company_name,
-DROP COLUMN IF EXISTS timestamp_date;")
-
-#add columns to db
-conn.exec("ALTER TABLE stock_prices_weekly 
-ADD COLUMN average_price NUMERIC,
-ADD COLUMN previous_value NUMERIC,
-ADD COLUMN year_month VARCHAR(10),
-ADD COLUMN week_no TEXT,
-ADD COLUMN timestamp_month TEXT,
-ADD COLUMN timestamp_year TEXT,
-ADD COLUMN timestamp_date DATE,
-ADD COLUMN company_name TEXT;")
-
-
-#add average_price column for weekly
+#add/update data on average_price column for weekly
 conn.exec("UPDATE stock_prices_weekly SET average_price= ROUND((open + high + low + close) / 4,3);")
 
-# #inserting data to previous_value column weekly
+#add/update data on previous_value column weekly
 conn.exec("UPDATE stock_prices_weekly
 SET previous_value = subquery.previous_value
 FROM (
@@ -49,21 +46,21 @@ FROM (
 ) AS subquery
 WHERE stock_prices_weekly.symbol = subquery.symbol AND stock_prices_weekly.timestamp = subquery.timestamp;")
 
-# # add computed columns for change & %_change weekly
-conn.exec("ALTER TABLE stock_prices_weekly ADD COLUMN percent_change NUMERIC generated always AS (round((open - previous_value) / previous_value * 100, 3)) stored;")
-conn.exec("ALTER TABLE stock_prices_weekly ADD COLUMN change NUMERIC generated always AS (round(open - previous_value, 3)) stored;")
+#add/update data on percent_change & change on columns
+conn.exec("UPDATE stock_prices_weekly SET percent_change = round((open - previous_value) / previous_value * 100, 3)")
+conn.exec("UPDATE stock_prices_weekly SET change = round(open - previous_value, 3)")
 
-#add column for year_month ex."2023-Apr"
+#add/update data on year_month column ex."2023-Apr"
 conn.exec("UPDATE stock_prices_weekly SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")
 
-#add column for week_no (1-4), timestamp_month (January-December), timestamp_year (2023)
+#add/update data on week_no (1-4), timestamp_month (January-December), timestamp_year (2023) columns
 conn.exec("UPDATE stock_prices_weekly
 SET week_no = to_char(timestamp, 'W'),
 timestamp_month = to_char(timestamp, 'Month'),
 timestamp_year = to_char(timestamp, 'YYYY');")
 
-#add column for timestamp_date
-conn.exec("UPDATE stock_prices_weekly SET timestamp_date = CAST(timestamp AS DATE);")
+#add/update data on timestamp_date & created_at columns
+conn.exec("UPDATE stock_prices_weekly SET timestamp_date = CAST(timestamp AS DATE), created_at = CURRENT_TIMESTAMP;")
 
 #add column for company name
 conn.exec("UPDATE stock_prices_weekly
@@ -82,9 +79,5 @@ SET company_name =
   ELSE ''
   END;")
 
-    
-#add column for created_at (date_time of insertion to db)
-conn.exec("SET TIME ZONE 'UTC-8';")
-conn.exec("ALTER TABLE stock_prices_weekly ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;")
 # Close the database connection
 conn.close
