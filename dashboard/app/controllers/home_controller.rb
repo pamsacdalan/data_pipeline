@@ -3,22 +3,38 @@ class HomeController < ApplicationController
   end
 
   def intraday
+
+    # Get the selected symbol from the company filter
+    company = params[:company_intraday]
+
+    # Get the selected date range from the date filter
+    start_date = params[:start_date]
+    end_date = params[:end_date]    
+    
+    # Set default values for start_date and end_date if they are not selected
+    start_date ||= Date.today.prev_day
+    end_date ||= Date.today.prev_day
+
+
     @stock_prices = StockPricesIntraday.where("(symbol, timestamp) IN (
       SELECT symbol, MAX(timestamp)
       FROM stock_prices_intraday
       GROUP BY symbol
     )").all
 
-    @intra_stock_prices = StockPricesIntraday.order(timestamp: :asc).all
     @companies = StockPricesIntraday.distinct.pluck(:symbol) # get all companies
-
-    
-    # Get the selected symbol from the company filter
-    company = params[:company_intraday]
-    
+    @dates = StockPricesIntraday.distinct.pluck(:timestamp_date)
+    @intra_stock_prices = StockPricesIntraday.where(timestamp_date: start_date..end_date).order(timestamp: :asc).all
 
     if company.present?
+      @intra_stock_prices = StockPricesIntraday.where(timestamp_date: start_date..end_date).order(timestamp: :asc).all
       @filtered_symbols = @companies & @intra_stock_prices.where(symbol: company).pluck(:symbol)
+      
+      if start_date.present? && end_date.present?
+        @intra_stock_prices = StockPricesIntraday.where(timestamp_date: start_date..end_date).order(timestamp: :asc).all
+        @filtered_symbols = @companies & @intra_stock_prices.where(symbol: company).pluck(:symbol)
+      end
+      
     else
       @filtered_symbols = @companies
     end
@@ -26,6 +42,7 @@ class HomeController < ApplicationController
     @data = @filtered_symbols.map do |filtered_symbol|
         { name: filtered_symbol, data: @intra_stock_prices.where(symbol: filtered_symbol).pluck(:timestamp, :close).to_h }
     end
+
 
   end 
       

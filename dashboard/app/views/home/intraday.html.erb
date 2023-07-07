@@ -127,11 +127,13 @@
                 </div>
                 <div class="col">
                   <%= form_tag({ action: "intraday" }, method: "get", class: "filter-form", id: "filter-form") do %>
-                      <div style="display: flex; align-items: center;">
-                        <%= select_tag(:company_intraday, options_for_select(@companies, params[:company_intraday]), include_blank: 'All', class: "form-control form-control-sm", style: "width: 150px; margin-left: auto;", onchange: "this.form.submit();") %>
-                      </div>
+                    <div style="display: flex; align-items: right;">
+                    <%= select_tag(:company_intraday, options_for_select(@companies, params[:company_intraday]), include_blank: 'All', class: "form-control form-control-sm", style: "width: 80px; margin-left: auto;") %>
+                      <%= select_tag(:start_date, options_for_select(@dates, params[:start_date]), include_blank: 'Select start date', class: "form-control form-control-sm", style: "width: 150px; ") %>
+                      <%= select_tag(:end_date, options_for_select(@dates, params[:end_date]), include_blank: 'Select end date', class: "form-control form-control-sm", style: "width: 150px; ") %>
+                      <%= submit_tag("Apply Filters", class: "btn btn-secondary btn-sm") %>
+                    </div>
                   <% end %>
-                </div>
               </div>
               <br>
               <div id="chart" style="text-align: center; height: 100%">
