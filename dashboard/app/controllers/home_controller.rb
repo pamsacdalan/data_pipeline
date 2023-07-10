@@ -12,8 +12,8 @@ class HomeController < ApplicationController
     end_date = params[:end_date]    
     
     # Set default values for start_date and end_date if they are not selected
-    start_date ||= Date.today.prev_day
-    end_date ||= Date.today.prev_day
+    start_date ||= StockPricesIntraday.maximum(:timestamp_date)
+    end_date ||= StockPricesIntraday.maximum(:timestamp_date)
 
 
     @stock_prices = StockPricesIntraday.where("(symbol, timestamp) IN (
