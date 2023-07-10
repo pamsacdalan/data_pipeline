@@ -273,31 +273,35 @@
                                 <table class="table table-sm table-striped ml-6">
                                       <thead>
                                           <tr>
-                                              <th style="text-align: left">COMPANIES</th>
-                                              <th style="text-align: right">HIGH</th>
-                                              <th style="text-align: right">LOW</th>
-                                              <th style="text-align: right">OPEN</th>
-                                              <th style="text-align: right">CLOSE</th>
-                                              <th style="text-align: right">CHG</th>
-                                              <th style="text-align: right">%CHG</th>
-                                          </tr>
-                                      </thead>
-              
-                                      <tbody>
-                                          <% @stock_prices.each do |stock_price| %>
-                                              <tr>
-                                                  <td style="text-align: left;">
-                                                    <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
-                                                      <% if image_filename.present? %>
-                                                        <%= image_tag(image_filename, class: "company-logo", size: "20x20", style: "margin-right: 5px;") %>
-                                                      <% end %><%= stock_price.company_name %>
-                                                  </td>
-                                                  <td style="text-align: right"><%= stock_price.high.round(3) %></td>
-                                                  <td style="text-align: right"><%= stock_price.low.round(3) %></td>
-                                                  <td style="text-align: right"><%= stock_price.open.round(3) %></td>
-                                                  <td style="text-align: right"><%= stock_price.close.round(3) %></td>
-                                                  <td style="text-align: right"><%= stock_price.change.round(3) %></td>
-                                                  <td style="text-align: right"><% if stock_price.percent_change.nil? %>
+                                          <th style="text-align: left">COMPANIES</th>
+                                          <th style="text-align: right">HIGH</th>
+                                          <th style="text-align: right">LOW</th>
+                                          <th style="text-align: right">OPEN</th>
+                                          <th style="text-align: right">CLOSE</th>
+                                          <th style="text-align: right">VOLUME</th>
+                                          <th style="text-align: right">YTD</th>
+                                          <th style="text-align: right">CHG</th>
+                                          <th style="text-align: right">%CHG</th>
+                                      </tr>
+                                  </thead>
+          
+                                  <tbody>
+                                      <% @stock_prices.each do |stock_price| %>
+                                          <tr>
+                                              <td style="text-align: left;">
+                                                <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
+                                                  <% if image_filename.present? %>
+                                                    <%= image_tag(image_filename, class: "company-logo", size: "20x20", style: "margin-right: 5px;") %>
+                                                  <% end %><%= stock_price.company_name %>
+                                              </td>
+                                              <td style="text-align: right"><%= stock_price.high.round(3) %></td>
+                                              <td style="text-align: right"><%= stock_price.low.round(3) %></td>
+                                              <td style="text-align: right"><%= stock_price.open.round(3) %></td>
+                                              <td style="text-align: right"><%= stock_price.close.round(3) %></td>
+                                              <td style="text-align: right"><%= stock_price.volume %></td>
+                                              <td style="text-align: right"><%= stock_price.ytd %></td>
+                                              <td style="text-align: right"><%= stock_price.change.round(3) %></td>
+                                              <td style="text-align: right"><% if stock_price.percent_change.nil? %>
                                                                                   <span>No Data</span>
                                                                                 <% elsif stock_price.percent_change < 0 %>
                                                                                   <span style="color: red; font-weight: bold; font-size: 15"><%= stock_price.percent_change.round(3) %>%</span>
