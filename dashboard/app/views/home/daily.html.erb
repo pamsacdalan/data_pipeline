@@ -109,7 +109,7 @@
             <div class="row">
               <div class="col">
                 <h3>Stock Market - Daily</h3>
-                <p class="subtitle">Returns data for closing price, high price, low price, open price, closing price, change, and percent change daily</p>
+                <p class="subtitle">Returns daily data (last trading day, daily open, daily high, daily low, daily close )</p>
               </div>
             </div>
           </div>
@@ -230,35 +230,50 @@
         
 
 
-                        <!-- Display Chart -->
-                        <div class="container" style="padding: 0">
-                          <div class="row">
-                            <div class="col-12">
-                              <div class="card" style="padding: 10px; height: 100%">
-                                <br>
-                                <div class="row">
-                                  <div class="col" style="margin-left: 15px; text-align: left; align-items: center;">
-                                    <h5>Daily Prices</h5>
-                                    <p class="subtitle">Closing price of each company in Daily</p>
-                                  </div>
-                                  <div class="col">
-                                    <%= form_tag({ action: "daily" }, method: "get", class: "filter-form", id: "filter-form") do %>
-                                      <div style="display: flex; align-items: center;">
-                                        <%= select_tag(:company_daily, options_for_select(@companies, params[:company_daily]), include_blank: 'All', class: "form-control form-control-sm", style: "width: 80px; margin-left: auto;", onchange: "this.form.submit();") %>
-                                      </div>
-                                    <% end %>
-                                  </div>
-                                </div>
-                                <br>
+        <div class="container" style="padding: 0">
+        <div class="row">
+          <!-- 1st graph -->
+          <div class="col-lg-6">
+            <div class="card" style="padding: 10px; height: 100%">
+              <br>
+              <div class="row">
+                <div class="col" style="margin-left: 15px; text-align: left; align-items: center;">
+                  <h5>Daily Prices</h5>
+                  <p class="subtitle">Closing price of each company</p>
+                </div>
+                <div class="col">
+                  <%= form_tag({ action: "daily" }, method: "get", class: "filter-form", id: "filter-form") do %>
+                    <div style="display: flex; align-items: center;">
+                      <%= select_tag(:company_daily, options_for_select(@companies, params[:company_daily]), include_blank: 'All', class: "form-control form-control-sm", style: "width: 80px; margin-left: auto;", onchange: "this.form.submit();") %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+              <br>
+              <div id="column_chart" style="text-align: center; height: 100%">
+                <%= column_chart @data, ytitle: 'Closing Price', library: { chart: { zoomType: 'x' } } %>
+              </div>
+            </div>
+          </div>
+    
+          <!-- 2nd graph -->
+          <div class="col-lg-6">
+            <div class="card" style="padding: 10px; height: 100%">
+              <br>
+              <div class="row">
+                <div class="col" style="margin-left: 15px; text-align: left; align-items: center;">
+                  <h5>Price Movement</h5>
+                  <p class="subtitle">Shows the average % change of each company throughout the year</p>
+                </div>
+              </div>
+              <br>
+              <div id="line_chart" style="text-align: center; height: 100%">
+                <%= line_chart @series_data, min: nil, ytitle: 'Average % Change', chartArea: { left: '10%', top: '20%', right: '10%', bottom: '10%' }, discrete: true  %>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                                <!-- Add a wrapper div for the chart -->
-                                <div id="column_chart" style="text-align: center; height: 100%">
-                                  <%= column_chart @data, library: { chart: { zoomType: 'x' } } %>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <br>
                      
 
 
@@ -314,13 +329,12 @@
                                       </tbody>
               
                                   </table>
+                                  </div>
+                                  </div>
+                                </div>
+                              <br>
                             </div>
-                          </div>
-                        </div>
-                </div>
-            </div>      
-            <br>
-
-        </main>
-</body>
-</html>
+                            <br>
+                          </main>
+                      </body>
+                      </html>

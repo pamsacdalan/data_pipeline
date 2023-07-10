@@ -63,16 +63,35 @@ class HomeController < ApplicationController
     # Get the selected symbol from the company filter
     company = params[:company_daily]
 
+
+    # Get the ave %chg per symbol throught the year
+    @ave_chg_per_year = StockPricesDaily.select('symbol, AVG(percent_change) AS ave_change, "timestamp"')
+                          .where("EXTRACT(YEAR FROM timestamp) = ?", 2023)
+                          .group('symbol, "timestamp"')
+                          .where(symbol: company)
+
     if company.present?
       @filtered_symbols = @companies & @daily_stock_prices.where(symbol: company).pluck(:symbol)
     else
       @filtered_symbols = @companies
+      @ave_chg_per_year = StockPricesDaily.select('symbol, AVG(percent_change) AS ave_change, "timestamp"')
+                                      .where("EXTRACT(YEAR FROM timestamp) = ?", 2023)
+                                      .group('symbol, "timestamp"')
+    end
+    
+    # Data for column chart
+    @data = @filtered_symbols.map do |filtered_symbol|
+      { name: filtered_symbol, data: @daily_stock_prices.where(symbol: filtered_symbol).pluck(:year_month, :close).to_h }
+    end
+    
+    # Data for the line chart
+    @line_chart_data = @ave_chg_per_year.group_by(&:symbol).transform_values do |rows|
+      rows.map { |row| [row.timestamp.to_date, row.ave_change] }
     end
 
-        # Data for column chart
-    @data = @filtered_symbols.map do |filtered_symbol|
-      { name: filtered_symbol, data: @daily_stock_prices.where(symbol: filtered_symbol).pluck(:timestamp_date, :close).to_h }
-    end
+    @series_data = @line_chart_data.map { |symbol, values| { name: symbol, data: values } }
+
+  end
 
 
   
@@ -141,7 +160,7 @@ def monthly
   company = params[:company_monthly]
 
   # Data for the area-chart
-  @monthly_stock_prices = StockPricesMonthly.all
+  @monthly_stock_prices = StockPricesMonthly.order(timestamp: :asc).all
   @companies = StockPricesMonthly.distinct.pluck(:symbol) # get all companies
 
   # Get the ave %chg per symbol throughout the year
@@ -175,7 +194,6 @@ def monthly
 end
 
 
-end
 
 
 
