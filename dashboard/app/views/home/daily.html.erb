@@ -14,67 +14,18 @@
     <script src="https://cdn.jsdelivr.net/jquery.slick/1.8.1/slick.min.js"></script>
 
 
-    
-
-    <!-- Bootstrap core CSS -->
-<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-      .filter label,
-      .filter .form-control {
-        font-size: 0.875rem; 
-      }
-    
-      .filter .col-1 {
-        width: 10%; 
-      }
-
-
-      
-
-      .mover-card {
-        animation: horizontalScroll 5s infinite linear;
-      }
-      
-      @keyframes horizontalScroll {
-        0% {
-          transform: translateX(0%);
-        }
-        100% {
-          transform: translateX(-100%);
-        }
-      }
-      
-      
-    </style>
-
-    
     <!-- Custom styles for this template -->
-    
-    <link href="dashboard.css" rel="stylesheet">
+    <link href="<%= asset_path('dashboard.css') %>" rel="stylesheet">
+  
   </head>
   <body>
   <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <%= link_to "DASHBOARD", root_path, class: "navbar-brand col-md-3 col-lg-2 me-0 px-3" %>
+    <%= link_to "DASHBOARD", root_path, class: "navbar-brand col-md-3 col-lg-2 me-0 px-3", style:"width: 15%" %>
   </header>
 
     <div class="container-fluid">
       <div class="row">
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="width: 15%">
           <div class="position-sticky pt-3">
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
               <span>Stock Prices</span>
@@ -86,11 +37,11 @@
               <li class="nav-item">
                 <%= link_to "Intraday", root_path, class: "nav-link" %>
               </li>
-              <li class="nav-item">
+              <li class="nav-item active">
                 <%= link_to "Daily", daily_path, class: "nav-link" %>
                   <span data-feather="shopping-cart"></span>
               </li>
-              <li class="nav-item active">
+              <li class="nav-item">
                 <%= link_to "Weekly", weekly_path, class: "nav-link" %>
                   <span data-feather="users"></span>
               </li>
@@ -115,7 +66,6 @@
           </div>
         </div>
         <br>
-        
         
         
         <!-- Display Cards Moving-->
@@ -157,51 +107,6 @@
             </div>
           </div>
         </div>
-        
-        <style>
-        .carousel-btn {
-          width: 30px;
-          height: 30px;
-          background-color: transparent;
-          border: none;
-          cursor: pointer;
-          opacity: 0.2;
-          transition: opacity 0.3s ease;
-        }
-        
-        .carousel-left-btn::before,
-        .carousel-right-btn::before {
-          content: "";
-          display: inline-block;
-          width: 0;
-          height: 0;
-          border-style: solid;
-        }
-        
-        .carousel-left-btn::before {
-          border-width: 8px 5px 8px 0;
-          border-color: transparent #000000 transparent transparent;
-          transform: rotate(1deg); 
-        }
-        
-        .carousel-right-btn::before {
-          border-width: 8px 0 8px 5px; 
-          border-color: transparent transparent transparent #000000;
-          transform: rotate(-1deg); 
-        }
-        
-        .carousel-container {
-          display: flex;
-          overflow-x: auto;
-          scroll-behavior: smooth;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-        
-        .carousel-container::-webkit-scrollbar {
-          display: none;
-        }
-        </style>
         
         <script>
         let scrollIntervalId;
@@ -258,13 +163,7 @@
                               </div>
                             </div>
                           </div>
-                          <br>
-                     
-
-
-
-                    
-              
+                        </div>
                         <!-- Display Table -->
                         <br>
                         <div class="col">

@@ -11,277 +11,187 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
 
     
-
-    <!-- Bootstrap core CSS -->
-<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-      .mover-card {
-        animation: horizontalScroll 7s infinite linear;
-      }
-      
-      @keyframes horizontalScroll {
-        0% {
-          transform: translateX(0%);
-        }
-        100% {
-          transform: translateX(-100%);
-        }
-      }
-    </style>
-
-    
     <!-- Custom styles for this template -->
-    <link href="dashboard.css" rel="stylesheet">
+    <link href="<%= asset_path('dashboard.css') %>" rel="stylesheet">
   </head>
   <body>
-    
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <%= link_to "DASHBOARD", root_path, class: "navbar-brand col-md-3 col-lg-2 me-0 px-3" %>
-</header>
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+      <%= link_to "DASHBOARD", root_path, class: "navbar-brand col-md-3 col-lg-2 me-0 px-3", style:"width: 15%" %>
+    </header>
 
-<div class="container-fluid">
-  <div class="row">
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-      <div class="position-sticky pt-3">
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Stock Prices</span>
-          <a class="link-secondary" href="#" aria-label="Add a new report">
-            <span data-feather="plus-circle"></span>
-          </a>
-        </h6>
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <%= link_to "Intraday", intraday_path, class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Daily", daily_path, class: "nav-link" %>
-          </li>
-          <li class="nav-item active">
-             <%= link_to "Weekly", weekly_path, class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Monthly", monthly_path, class: "nav-link" %>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-left: 5px">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <h3>Stock Market - Intraday</h3>
-              <p class="subtitle">Intraday series covering extended trading hours where applicable</p>
-            </div>
+    <div class="container-fluid">
+      <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="width: 15%">
+          <div class="position-sticky pt-3">
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Stock Prices</span>
+              <a class="link-secondary" href="#" aria-label="Add a new report">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+            <ul class="nav flex-column">
+              <li class="nav-item active">
+                <%= link_to "Intraday", intraday_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Daily", daily_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Weekly", weekly_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Monthly", monthly_path, class: "nav-link" %>
+              </li>
+            </ul>
           </div>
-        </div>
-      </div>
-      <br>
+        </nav>
 
-
-
-  
-
-      <!-- Display Cards Moving-->
-      <div class="container" style="overflow-x: hidden">
-        <div class="row" style="flex-wrap: nowrap;">
-          <div class="col-1">
-            <button class="carousel-btn carousel-left-btn" id="carousel-left-btn" onmouseover="startAutoScroll('left')" onmouseout="stopAutoScroll()"></button>
-          </div>
-          <div class="col-10">
-            <div class="carousel-container">
-              <% @stock_prices.each do |stock_price| %>
-                <div class="col-3 mover-card">
-                  <div class="row">
-                    <div class="col-5">
-                      <div class="movers-text" style="font-size: 14px;">
-                        <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
-                        <% if image_filename.present? %>
-                          <%= image_tag(image_filename, class: "company-logo", size: "14x14", style: "margin-right: 5px;") %>
-                        <% end %>
-                        <span><%= stock_price.symbol %></span>
-                      </div>
-                    </div>
-                    <div class="col-6 movers-value-usd" style="color: green; text-align: left;">
-                    <%= stock_price.close.round(2) %> USD
-                    </div>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          </div>
-          <div class="col-1">
-            <button class="carousel-btn carousel-right-btn" id="carousel-right-btn" onmouseover="startAutoScroll('right')" onmouseout="stopAutoScroll()"></button>
-          </div>
-        </div>
-      </div>
-      
-      <style>
-      .carousel-btn {
-        width: 30px;
-        height: 30px;
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        opacity: 0.2;
-        transition: opacity 0.3s ease;
-      }
-      
-      .carousel-left-btn::before,
-      .carousel-right-btn::before {
-        content: "";
-        display: inline-block;
-        width: 0;
-        height: 0;
-        border-style: solid;
-      }
-      
-      .carousel-left-btn::before {
-        border-width: 8px 5px 8px 0;
-        border-color: transparent #000000 transparent transparent;
-        transform: rotate(1deg); 
-      }
-      
-      .carousel-right-btn::before {
-        border-width: 8px 0 8px 5px; 
-        border-color: transparent transparent transparent #000000;
-        transform: rotate(-1deg); 
-      }
-      
-      .carousel-container {
-        display: flex;
-        overflow-x: auto;
-        scroll-behavior: smooth;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-      }
-      
-      .carousel-container::-webkit-scrollbar {
-        display: none;
-      }
-      </style>
-      
-      <script>
-      let scrollIntervalId;
-      
-      function startAutoScroll(direction) {
-        const container = document.querySelector('.carousel-container');
-        const cardWidth = document.querySelector('.mover-card').offsetWidth;
-        const scrollDistance = direction === 'left' ? -cardWidth : cardWidth;
-      
-        scrollIntervalId = setInterval(() => {
-          container.scrollBy({
-            top: 0,
-            left: scrollDistance,
-            behavior: 'smooth'
-          });
-        }, 1000);
-      }
-      
-      function stopAutoScroll() {
-        clearInterval(scrollIntervalId);
-      }
-      </script>
-      
-      
-      <br>
-
-
-
-
-
-
-      <!--Graphs-->
-      <div class="container" style="padding: 0">
-          <div class="col">
-            <div class="card" style="padding: 10px; height: 100%">
-              <br>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-left: 5px">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <div class="container">
               <div class="row">
-                <div class="col" style="margin-left: 15px; text-align: left; align-items: center;">
-                  <h6>Intraday Prices</h6>
-                </div>
                 <div class="col">
-                  <%= form_tag({ action: "intraday" }, method: "get", class: "filter-form", id: "filter-form") do %>
-                    <div style="display: flex; align-items: right;">
-                      <%= select_tag(:company_intraday, options_for_select(@companies, params[:company_intraday]), include_blank: 'All', class: "form-control form-control-sm", style: "width: 80px; margin-left: auto;") %>
-                      <%= select_tag(:start_date, options_for_select(@dates, params[:start_date]), include_blank: 'Select start date', class: "form-control form-control-sm", style: "width: 150px; ") %>
-                      <%= select_tag(:end_date, options_for_select(@dates, params[:end_date]), include_blank: 'Select end date', class: "form-control form-control-sm", style: "width: 150px; ") %>
-                      <%= submit_tag("Apply Filters", class: "btn btn-secondary btn-sm") %>
-                    </div>
-                  <% end %>
-              </div>
-              <br>
-              <div id="chart" style="text-align: center; height: 100%">
-                            <% chart_options = {
-                                ytitle: "Closing Price",
-                                height: '100%',
-                                min: nil,
-                                library: {
-                                chartArea: { left: '10%', top: '20%', right: '10%', bottom: '10%' },
-                                }
-                            } %>
-
-                <%= column_chart @data, **chart_options %>
-
+                  <h3>Stock Market - Intraday</h3>
+                  <p class="subtitle">Intraday series covering extended trading hours where applicable</p>
+                </div>
               </div>
             </div>
           </div>
           <br>
-          <div class="col">
-            <div class="card" style="padding: 10px; height: 100%">
-              <div id="price_chart" style="text-align: center; height: 100%">
-                  <table class="table table-sm table-striped ml-6">
-                        <thead>
-                            <tr>
-                                <th style="text-align: left">COMPANIES</th>
-                                <th style="text-align: right">HIGH</th>
-                                <th style="text-align: right">LOW</th>
-                                <th style="text-align: right">OPEN</th>
-                                <th style="text-align: right">CLOSE</th>
-                                <th style="text-align: right">VOLUME</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <% @stock_prices.each do |stock_price| %>
-                                <tr>
-                                    <td style="text-align: left;">
-                                      <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
-                                        <% if image_filename.present? %>
-                                          <%= image_tag(image_filename, class: "company-logo", size: "20x20", style: "margin-right: 5px;") %>
-                                        <% end %><%= stock_price.company_name %>
-                                    </td>
-                                    <td style="text-align: right"><%= stock_price.high.round(3) %></td>
-                                    <td style="text-align: right"><%= stock_price.low.round(3) %></td>
-                                    <td style="text-align: right"><%= stock_price.open.round(3) %></td>
-                                    <td style="text-align: right"><%= stock_price.close.round(3) %></td>
-                                    <td style="text-align: right"><%= stock_price.volume %></td>
-                                </tr>
+          <!-- Display Cards Moving-->
+          <div class="container" style="overflow-x: hidden">
+            <div class="row" style="flex-wrap: nowrap;">
+              <div class="col-1">
+                <button class="carousel-btn carousel-left-btn" id="carousel-left-btn" onmouseover="startAutoScroll('left')" onmouseout="stopAutoScroll()"></button>
+              </div>
+              <div class="col-10">
+                <div class="carousel-container">
+                  <% @stock_prices.each do |stock_price| %>
+                    <div class="col-3 mover-card">
+                      <div class="row">
+                        <div class="col-5">
+                          <div class="movers-text" style="font-size: 14px;">
+                            <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
+                            <% if image_filename.present? %>
+                              <%= image_tag(image_filename, class: "company-logo", size: "14x14", style: "margin-right: 5px;") %>
                             <% end %>
-                        </tbody>
-
-                    </table>
+                            <span><%= stock_price.symbol %></span>
+                          </div>
+                        </div>
+                        <div class="col-6 movers-value-usd" style="color: green; text-align: left;">
+                        <%= stock_price.close.round(2) %> USD
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+              <div class="col-1">
+                <button class="carousel-btn carousel-right-btn" id="carousel-right-btn" onmouseover="startAutoScroll('right')" onmouseout="stopAutoScroll()"></button>
               </div>
             </div>
-          </div>  
-        <br><br>
-      </div>
-    </main>
+          </div>
+          
+          <script>
+          let scrollIntervalId;
+          
+          function startAutoScroll(direction) {
+            const container = document.querySelector('.carousel-container');
+            const cardWidth = document.querySelector('.mover-card').offsetWidth;
+            const scrollDistance = direction === 'left' ? -cardWidth : cardWidth;
+          
+            scrollIntervalId = setInterval(() => {
+              container.scrollBy({
+                top: 0,
+                left: scrollDistance,
+                behavior: 'smooth'
+              });
+            }, 1000);
+          }
+          
+          function stopAutoScroll() {
+            clearInterval(scrollIntervalId);
+          }
+          </script>
+          
+          
+          <br>
+          <!--Graphs-->
+          <div class="container" style="padding: 0">
+              <div class="col">
+                <div class="card" style="padding: 10px; height: 100%">
+                  <br>
+                  <div class="row">
+                    <div class="col" style="margin-left: 15px; text-align: left; align-items: center;">
+                      <h6>Intraday Prices</h6>
+                    </div>
+                    <div class="col">
+                      <%= form_tag({ action: "intraday" }, method: "get", class: "filter-form", id: "filter-form") do %>
+                        <div style="display: flex; align-items: right;">
+                          <%= select_tag(:company_intraday, options_for_select(@companies, params[:company_intraday]), include_blank: 'All', class: "form-control form-control-sm", style: "width: 80px; margin-left: auto;") %>
+                          <%= select_tag(:start_date, options_for_select(@dates, params[:start_date]), include_blank: 'Select start date', class: "form-control form-control-sm", style: "width: 150px; ") %>
+                          <%= select_tag(:end_date, options_for_select(@dates, params[:end_date]), include_blank: 'Select end date', class: "form-control form-control-sm", style: "width: 150px; ") %>
+                          <%= submit_tag("Apply Filters", class: "btn btn-secondary btn-sm") %>
+                        </div>
+                      <% end %>
+                  </div>
+                  <br>
+                  <div id="chart" style="text-align: center; height: 100%">
+                                <% chart_options = {
+                                    ytitle: "Closing Price",
+                                    height: '100%',
+                                    min: nil,
+                                    library: {
+                                    chartArea: { left: '10%', top: '20%', right: '10%', bottom: '10%' },
+                                    }
+                                } %>
+
+                    <%= column_chart @data, **chart_options %>
+
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="col">
+                <div class="card" style="padding: 10px; height: 100%">
+                  <div id="price_chart" style="text-align: center; height: 100%">
+                      <table class="table table-sm table-striped ml-6">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left">COMPANIES</th>
+                                    <th style="text-align: right">HIGH</th>
+                                    <th style="text-align: right">LOW</th>
+                                    <th style="text-align: right">OPEN</th>
+                                    <th style="text-align: right">CLOSE</th>
+                                    <th style="text-align: right">VOLUME</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <% @stock_prices.each do |stock_price| %>
+                                    <tr>
+                                        <td style="text-align: left;">
+                                          <% image_filename = logo_filename_for_symbol(stock_price.symbol) %>
+                                            <% if image_filename.present? %>
+                                              <%= image_tag(image_filename, class: "company-logo", size: "20x20", style: "margin-right: 5px;") %>
+                                            <% end %><%= stock_price.company_name %>
+                                        </td>
+                                        <td style="text-align: right"><%= stock_price.high.round(3) %></td>
+                                        <td style="text-align: right"><%= stock_price.low.round(3) %></td>
+                                        <td style="text-align: right"><%= stock_price.open.round(3) %></td>
+                                        <td style="text-align: right"><%= stock_price.close.round(3) %></td>
+                                        <td style="text-align: right"><%= stock_price.volume %></td>
+                                    </tr>
+                                <% end %>
+                            </tbody>
+
+                        </table>
+                  </div>
+                </div>
+              </div>  
+            <br><br>
+          </div>
+        </main>
+    </div>
 </body>
 </html>

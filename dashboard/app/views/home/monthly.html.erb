@@ -11,84 +11,19 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
 
     
-
-    <!-- Bootstrap core CSS -->
-<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-      .filter label,
-      .filter .form-control {
-        font-size: 0.875rem; /* Adjust the font size to make it smaller */
-      }
-    
-      .filter .col-1 {
-        width: 10%; /* Adjust the width to make the columns smaller */
-      }
-
-
-
-      .mover-card {
-        animation: horizontalScroll 5s infinite linear;
-      }
-      
-      @keyframes horizontalScroll {
-        0% {
-          transform: translateX(0%);
-        }
-        100% {
-          transform: translateX(-100%);
-        }
-      }
-      
-      
-
-      .graph {
-        text-align: center;
-        height: 100%;
-      }
-
-      .graph-container {
-        padding: 10px;
-        height: 100%;
-      }
-
-      @media (min-width: 768px) {
-        .graph-container {
-          width: 50%; /* Adjust the width as needed */
-        }
-      }
-
-
-    </style>
-
-    
     <!-- Custom styles for this template -->
-    <link href="dashboard.css" rel="stylesheet">
+    <link href="<%= asset_path('dashboard.css') %>" rel="stylesheet">
   </head>
   <body>
     
   <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <%= link_to "DASHBOARD", root_path, class: "navbar-brand col-md-3 col-lg-2 me-0 px-3" %>
+    <%= link_to "DASHBOARD", root_path, class: "navbar-brand col-md-3 col-lg-2 me-0 px-3", style:"width: 15%" %>
   </header>
 
 
 <div class="container-fluid">
   <div class="row">
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="width: 15%">
       <div class="position-sticky pt-3">
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Stock Prices</span>
@@ -103,10 +38,10 @@
           <li class="nav-item">
             <%= link_to "Daily", daily_path, class: "nav-link" %>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
              <%= link_to "Weekly", weekly_path, class: "nav-link" %>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <%= link_to "Monthly", monthly_path, class: "nav-link" %>
           </li>
         </ul>
