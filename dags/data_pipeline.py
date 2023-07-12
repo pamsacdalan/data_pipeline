@@ -1,7 +1,9 @@
 from airflow import DAG
+from airflow.models import DagRun
 from airflow.models import Variable
-from airflow.operators.python_operator import PythonOperator
-from datetime import datetime, timedelta
+from airflow.operators.python_operator import PythonOperator, BranchPythonOperator, ShortCircuitOperator
+from airflow.operators.dummy_operator import DummyOperator
+from datetime import date, datetime, timedelta
 import subprocess
 from airflow.operators.slack_operator import SlackAPIPostOperator
 import os
@@ -16,6 +18,8 @@ dag = DAG('data_pipeline',
           catchup=False)
 
 current_folder = os.path.dirname(__file__)
+
+today = date.today()
 
 def connect_to_slack(message, task_name=None, **kwargs):
     """
@@ -186,13 +190,38 @@ for task_id in task_id_list:
     )
     send_notif_dict[task_id] = task
 
+send_start_notification = PythonOperator(task_id='start_notification', python_callable=connect_to_slack, op_args=['Stocks Data Pipeline has been Trigerred! Date: {}'.format(today)], dag=dag)
 
-fetch_data_task >> check_conn_task
 
-check_conn_task >> store_db_dict['store_intraday_task'] >> add_cols_dict['add_computed_intraday_cols_task'] >> send_notif_dict['intraday_success_notification']
+join_branch = DummyOperator(task_id='join_branch', trigger_rule='all_done', dag=dag)
 
-check_conn_task >> store_db_dict['store_daily_task'] >> add_cols_dict['add_computed_daily_cols_task'] >> send_notif_dict['daily_success_notification']
 
-check_conn_task >> store_db_dict['store_weekly_task'] >> add_cols_dict['add_computed_weekly_cols_task'] >> send_notif_dict['weekly_success_notification']
+def send_final_notification(**context):
+	
+    "Function to send the final message to slack client"
+	
+	dag_run = DagRun.find(dag_id='data_pipeline', execution_date=context['execution_date'])
+    	failed_task_ids = [task.task_id for task in dag_run[0].get_task_instances() if task.state == 'failed']	
 
-check_conn_task >> store_db_dict['store_monthly_task'] >> add_cols_dict['add_computed_monthly_cols_task'] >> send_notif_dict['monthly_success_notification']
+	if failed_task_ids:
+		message = 'Stocks Data Pipeline has been executed. Dag run finished with error'
+	else:
+		message = 'Stocks Data Pipeline has been successfully executed. Dashboard is now refreshed'
+	
+
+	connect_to_slack(message=message)
+
+send_final_notification = PythonOperator(task_id='final_notification', python_callable=send_final_notification, provide_context=True, dag=dag)
+
+send_start_notification >> fetch_data_task >> check_conn_task
+
+check_conn_task >> store_db_dict['store_intraday_task'] >> add_cols_dict['add_computed_intraday_cols_task'] >> send_notif_dict['intraday_success_notification'] >> join_branch
+
+check_conn_task >> store_db_dict['store_daily_task'] >> add_cols_dict['add_computed_daily_cols_task'] >> send_notif_dict['daily_success_notification'] >> join_branch
+
+check_conn_task >> store_db_dict['store_weekly_task'] >> add_cols_dict['add_computed_weekly_cols_task'] >> send_notif_dict['weekly_success_notification'] >> join_branch
+
+check_conn_task >> store_db_dict['store_monthly_task'] >> add_cols_dict['add_computed_monthly_cols_task'] >> send_notif_dict['monthly_success_notification'] >> join_branch
+
+
+join_branch >> send_final_notification

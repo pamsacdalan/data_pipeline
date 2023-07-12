@@ -1,4 +1,4 @@
-# Created by https://www.toptal.com/developers/gitignore/api/rails,visualstudio
+ # Created by https://www.toptal.com/developers/gitignore/api/rails,visualstudio
 # Edit at https://www.toptal.com/developers/gitignore?templates=rails,visualstudio
 
 ### Rails ###
@@ -14,6 +14,19 @@ capybara-*.html
 *.orig
 rerun.txt
 pickle-email-*.html
+
+# Ignore inital ruby and python files
+config.rb
+data_extraction.rb
+fetch_data.rb
+sqlite_data_extraction.rb
+store_data.rb
+
+financial_data_dag.py
+subtask.py
+
+# Ignore Gemfile
+Gemfile*
 
 # Ignore all logfiles and tempfiles.
 /log/*
