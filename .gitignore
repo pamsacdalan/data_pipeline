@@ -16,14 +16,9 @@ rerun.txt
 pickle-email-*.html
 
 # Ignore inital ruby and python files
-/config.rb
-/data_extraction.rb
-/fetch_data.rb
-/sqlite_data_extraction.rb
-/store_data.rb
+*.rb
+*.py
 
-/financial_data_dag.py
-/subtask.py
 
 # Ignore Gemfile
 Gemfile*
