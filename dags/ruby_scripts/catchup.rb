@@ -25,60 +25,74 @@ until (1..4).include?(table_number)
   table_number = gets.chomp.to_i
 end
 
-if table_number == 1
-  sched = 'INTRADAY'
-  puts "Enter the start date (YYYY-MM): "
-  start_date = Date.parse("#{gets.chomp}-01")
-  puts "Enter the end date (YYYY-MM): "
-  end_date = Date.parse("#{gets.chomp}-01")
 
-  current_date = start_date
-  #create catchup_date list inputs all dates that ranges from start_date to end_date
-  while current_date <= end_date
-    catchup_date << current_date.strftime("%Y-%m")
-    current_date = current_date.next_day
+#accepts only date in YYYY-MM-DD format
+#returns true if correct date format
+def valid_date_format?(date_string)
+    # Validate against the format YYYY-MM-DD
+    valid_format = /\A\d{4}-\d{2}-\d{2}\z/.match?(date_string)
+  
+    # Ensure the parsed date is valid
+    valid_format && Date.parse(date_string)
+  rescue ArgumentError
+    false
   end
-elsif table_number == 2
-  sched = 'DAILY_ADJUSTED'
-  puts "Enter the start date (YYYY-MM-DD): "
-  start_date = Date.parse(gets.chomp)
-  puts "Enter the end date (YYYY-MM-DD): "
-  end_date = Date.parse(gets.chomp)
 
-  current_date = start_date
-  while current_date <= end_date
-    catchup_date << current_date.strftime("%Y-%m-%d")
-    current_date = current_date.next_day
+#create catchup_date table
+  def get_date_range
+    loop do
+      puts "Enter the start date (YYYY-MM-DD): "
+      start_date_input = gets.chomp.strip #remove leading and trailing spaces
+      puts "Enter the end date (YYYY-MM-DD): "
+      end_date_input = gets.chomp.strip
+  
+      if !valid_date_format?(start_date_input) || !valid_date_format?(end_date_input)
+        puts "Invalid Date Format."
+        next
+      end
+  
+      start_date = Date.parse(start_date_input)
+      end_date = Date.parse(end_date_input)
+  
+      if start_date > end_date
+        puts "Start Date MUST be before End Date."
+        next
+      end
+  
+      catchup_date = []
+      current_date = start_date
+  
+      while current_date <= end_date
+        catchup_date << current_date.strftime("%Y-%m-%d")
+        current_date = current_date.next_day
+      end
+  
+      return catchup_date
+    end
   end
-elsif table_number == 3
-  sched = 'WEEKLY'
-  puts "Enter the start date (YYYY-MM-DD): "
-  start_date = Date.parse(gets.chomp)
-  puts "Enter the end date (YYYY-MM-DD): "
-  end_date = Date.parse(gets.chomp)
+  
+  if table_number == 1
+    sched = 'INTRADAY'
+  elsif table_number == 2
+    sched = 'DAILY_ADJUSTED'
+  elsif table_number == 3
+    sched = 'WEEKLY'
+  elsif table_number == 4
+    sched = 'MONTHLY'
+  end
+  
+  catchup_date = get_date_range
 
-  current_date = start_date
-  while current_date <= end_date
-    catchup_date << current_date.strftime("%Y-%m-%d")
-    current_date = current_date.next_day
-  end
-elsif table_number == 4
-  sched = 'MONTHLY'
-  puts "Enter the start date (YYYY-MM-DD): "
-  start_date = Date.parse(gets.chomp)
-  puts "Enter the end date (YYYY-MM-DD): "
-  end_date = Date.parse(gets.chomp)
 
-  current_date = start_date
-  while current_date <= end_date
-    catchup_date << current_date.strftime("%Y-%m-%d")
-    current_date = current_date.next_day
-  end
+year_month = []
+catchup_date.each do |date|
+    year_month << Date.parse(date).strftime("%Y-%m")
 end
+
 
 # Get the unique dates from the catchup_date table
 catchup_date = catchup_date.uniq
-
+year_month = year_month.uniq
 
 conn = PG.connect(db_config)
 
@@ -96,24 +110,26 @@ def create_table(conn, table_name)
 end
 
 if sched == 'INTRADAY'
-  catchup_date.each do |date|
+  year_month.each do |date|
         symbols.each do |symbol|
-          puts "Fetching #{sched} #{symbol} Data for #{date}"
+            puts "Fetching #{sched} #{symbol} Data for #{catchup_date.first} to #{catchup_date.last}"
 
           # Process the request
               response = HTTParty.get("https://www.alphavantage.co/query?function=TIME_SERIES_#{sched}&symbol=#{symbol}&interval=#{interval}&month=#{date}&outputsize=full&apikey=#{api_key}")
               parsed_data = JSON.parse(response.body)["Time Series (5min)"]
               processed_data = parsed_data.map do |timestamp, values|
-                  {
-                    timestamp: Time.parse(timestamp).iso8601,
-                    symbol: symbol,
-                    open: values['1. open'].to_f,
-                    high: values['2. high'].to_f,
-                    low: values['3. low'].to_f,
-                    close: values['4. close'].to_f,
-                    volume: values['5. volume'].to_i
-                  }
-              end
+                if catchup_date.include?(timestamp.split(' ')[0]) 
+                    {
+                        timestamp: Time.parse(timestamp).iso8601,
+                        symbol: symbol,
+                        open: values['1. open'].to_f,
+                        high: values['2. high'].to_f,
+                        low: values['3. low'].to_f,
+                        close: values['4. close'].to_f,
+                        volume: values['5. volume'].to_i
+                      }
+                end
+              end.compact
               table_name = "stock_prices_intraday" 
               #run create_table function
               create_table(conn, table_name)
@@ -139,15 +155,15 @@ if sched == 'INTRADAY'
                     )
                   end
                 end          
-              puts "#{sched} #{symbol} Data for #{start_date} to #{end_date} Successfully Fetched and Stored to #{table_name}"
-          sleep(20)
+              puts "#{sched} #{symbol} Data for #{catchup_date.first} to #{catchup_date.last} Successfully Fetched and Stored to #{table_name}"
+          sleep(15)
         end       
-    sleep(20)
+    sleep(15)
   end
 
 else
   symbols.each do |symbol|
-    puts "Fetching #{sched} #{symbol} Data for #{start_date} to #{end_date}"
+    puts "Fetching #{sched} #{symbol} Data for #{catchup_date.first} to #{catchup_date.last}"
     response = HTTParty.get("https://www.alphavantage.co/query?function=TIME_SERIES_#{sched}&symbol=#{symbol}&interval=#{interval}&outputsize=full&apikey=#{api_key}")
     # Process the request
     
@@ -233,8 +249,8 @@ else
           )
         end
       end          
-    puts "#{sched} #{symbol} Data for #{start_date} to #{end_date} Successfully Fetched and Stored to #{table_name}"
-    sleep(20)
+    puts "#{sched} #{symbol} Data for #{catchup_date.first} to #{catchup_date.last} Successfully Fetched and Stored to #{table_name}"
+    sleep(15)
   end
 end
   
