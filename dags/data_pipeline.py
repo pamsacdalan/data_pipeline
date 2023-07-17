@@ -3,7 +3,7 @@ from airflow.models import DagRun
 from airflow.models import Variable
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.dummy_operator import DummyOperator
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 import subprocess
 from airflow.operators.slack_operator import SlackAPIPostOperator
 import os
@@ -11,6 +11,8 @@ import os
 default_args = {
     'owner': 'airflowerism',
     'start_date': datetime(2023, 6, 1),
+    'retries': 3,                         # Number of retries in case of task failure
+    'retry_delay': timedelta(minutes=1),  # Time delay between retries
 }
 
 dag = DAG('data_pipeline',
@@ -19,7 +21,6 @@ dag = DAG('data_pipeline',
 
 current_folder = os.path.dirname(__file__)
 
-today = date.today()
 
 def connect_to_slack(message, task_name=None, **kwargs):
     """
@@ -45,7 +46,7 @@ def send_slack_notification(task_name, success=True, **kwargs):
     Sends a Slack notification indicating whether a task was executed successfully or encountered an error.
     
     """
-    message = "Task: {} executed successfully".format(task_name) if success else "Task: {} encountered an error".format(task_name)
+    message = "Stock Prices - {} executed successfully".format(task_name) if success else "Stock Prices - {} encountered an error".format(task_name)
     connect_to_slack(message=message, task_name=task_name)
 
 def execute_ruby_code(ruby_file, input_data=None, task_name=None):
@@ -174,8 +175,7 @@ def send_success_notification(task_name, **kwargs):
     Sends a success notification to a Slack App.
     
     """
-    sched = task_name.split('_')[0]
-    message = "{} data stored successfully".format(sched.title())
+    message = "Stock Prices - {} executed successfully".format(task_name)
     connect_to_slack(message=message, task_name=task_name)
 
 
@@ -190,7 +190,7 @@ for task_id in task_id_list:
     )
     send_notif_dict[task_id] = task
 
-send_start_notification = PythonOperator(task_id='start_notification', python_callable=connect_to_slack, op_args=['Stocks Data Pipeline has been Trigerred! Date: {}'.format(today)], dag=dag)
+send_start_notification = PythonOperator(task_id='start_notification', python_callable=connect_to_slack, op_args=['Stock Prices dag has been Triggered'], dag=dag)
 
 
 join_branch = DummyOperator(task_id='join_branch', trigger_rule='all_done', dag=dag)
@@ -201,12 +201,12 @@ def send_final_notification(**context):
     "Function to send the final message to slack client"
 	
 	dag_run = DagRun.find(dag_id='data_pipeline', execution_date=context['execution_date'])
-    	failed_task_ids = [task.task_id for task in dag_run[0].get_task_instances() if task.state == 'failed']	
+    failed_task_ids = [task.task_id for task in dag_run[0].get_task_instances() if task.state == 'failed']	
 
 	if failed_task_ids:
-		message = 'Stocks Data Pipeline has been executed. Dag run finished with error'
+		message = 'Stock Prices dag has been successfully executed but with error!'
 	else:
-		message = 'Stocks Data Pipeline has been successfully executed. Dashboard is now refreshed'
+		message = 'Stock Prices dag has been successfully executed. Tables are now updated!'
 	
 
 	connect_to_slack(message=message)
