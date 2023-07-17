@@ -15,7 +15,7 @@ default_args = {
     'retry_delay': timedelta(minutes=1),  # Time delay between retries
 }
 
-dag = DAG('data_pipeline',
+dag = DAG('stock_prices',
           default_args=default_args,
           catchup=False)
 
