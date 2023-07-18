@@ -18,7 +18,6 @@ BEGIN
   ) THEN
     ALTER TABLE stock_prices_monthly
     ADD COLUMN IF NOT EXISTS average_price NUMERIC,
-    ADD COLUMN IF NOT EXISTS previous_value NUMERIC,
     ADD COLUMN IF NOT EXISTS percent_change NUMERIC,
 	  ADD COLUMN IF NOT EXISTS change NUMERIC,
     ADD COLUMN IF NOT EXISTS first_month_close NUMERIC,
@@ -35,21 +34,9 @@ END $$;")
 #add/update data for average_price column on monthly
 conn.exec("UPDATE stock_prices_monthly SET average_price= ROUND((open + high + low + close) / 4,3);")
 
-#add/update data for previous_value column on monthly
-conn.exec("UPDATE stock_prices_monthly
-SET previous_value = subquery.previous_value
-FROM (
-    SELECT
-        symbol,
-        timestamp,
-        LAG(close) OVER (PARTITION BY symbol ORDER BY symbol, timestamp) AS previous_value
-    FROM stock_prices_monthly
-) AS subquery
-WHERE stock_prices_monthly.symbol = subquery.symbol AND stock_prices_monthly.timestamp = subquery.timestamp;")
-
 #add/update data for percent_change & change columns
-conn.exec("UPDATE stock_prices_monthly SET percent_change = round((open - previous_value) / previous_value * 100, 3)")
-conn.exec("UPDATE stock_prices_monthly SET change = round(open - previous_value, 3)")
+conn.exec("UPDATE stock_prices_monthly SET percent_change = round((close - open) / open * 100, 3)")
+conn.exec("UPDATE stock_prices_monthly SET change = round(close - open, 3)")
 
 #add/update data for first_month_close and ytd columns
 conn.exec("UPDATE stock_prices_monthly

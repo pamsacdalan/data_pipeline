@@ -18,7 +18,6 @@ BEGIN
   ) THEN
     ALTER TABLE stock_prices_weekly
     ADD COLUMN IF NOT EXISTS average_price NUMERIC,
-    ADD COLUMN IF NOT EXISTS previous_value NUMERIC,
     ADD COLUMN IF NOT EXISTS percent_change NUMERIC,
 	  ADD COLUMN IF NOT EXISTS change NUMERIC,
     ADD COLUMN IF NOT EXISTS year_month VARCHAR(10),
@@ -34,21 +33,10 @@ END $$;")
 #add/update data on average_price column for weekly
 conn.exec("UPDATE stock_prices_weekly SET average_price= ROUND((open + high + low + close) / 4,3);")
 
-#add/update data on previous_value column weekly
-conn.exec("UPDATE stock_prices_weekly
-SET previous_value = subquery.previous_value
-FROM (
-    SELECT
-        symbol,
-        timestamp,
-        LAG(close) OVER (PARTITION BY symbol ORDER BY symbol, timestamp) AS previous_value
-    FROM stock_prices_weekly
-) AS subquery
-WHERE stock_prices_weekly.symbol = subquery.symbol AND stock_prices_weekly.timestamp = subquery.timestamp;")
 
 #add/update data on percent_change & change on columns
-conn.exec("UPDATE stock_prices_weekly SET percent_change = round((open - previous_value) / previous_value * 100, 3)")
-conn.exec("UPDATE stock_prices_weekly SET change = round(open - previous_value, 3)")
+conn.exec("UPDATE stock_prices_weekly SET percent_change = round((close - open) / open * 100, 3)")
+conn.exec("UPDATE stock_prices_weekly SET change = round(close - open, 3)")
 
 #add/update data on year_month column ex."2023-Apr"
 conn.exec("UPDATE stock_prices_weekly SET year_month = CONCAT(EXTRACT(YEAR FROM timestamp), '-', TO_CHAR(timestamp, 'Mon'));")

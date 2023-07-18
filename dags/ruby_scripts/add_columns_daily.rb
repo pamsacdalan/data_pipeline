@@ -18,7 +18,6 @@ BEGIN
   ) THEN
     ALTER TABLE stock_prices_daily
     ADD COLUMN IF NOT EXISTS average_price NUMERIC,
-    ADD COLUMN IF NOT EXISTS previous_value NUMERIC,
     ADD COLUMN IF NOT EXISTS percent_change NUMERIC,
 	  ADD COLUMN IF NOT EXISTS change NUMERIC,
     ADD COLUMN IF NOT EXISTS first_day_close NUMERIC,
@@ -37,21 +36,9 @@ END $$;")
 #add/update data to average_price column for daily
 conn.exec("UPDATE stock_prices_daily SET average_price= ROUND((open + high + low + close) / 4,3);")
 
-#add/update data to previous_value column daily
-conn.exec("UPDATE stock_prices_daily
-SET previous_value = subquery.previous_value
-FROM (
-    SELECT
-        symbol,
-        timestamp,
-        LAG(close) OVER (PARTITION BY symbol ORDER BY symbol, timestamp) AS previous_value
-    FROM stock_prices_daily
-) AS subquery
-WHERE stock_prices_daily.symbol = subquery.symbol AND stock_prices_daily.timestamp = subquery.timestamp;")
-
 # add/update data for percent_change and change columns
-conn.exec("UPDATE stock_prices_daily SET percent_change = round((open - previous_value) / previous_value * 100, 3)")
-conn.exec("UPDATE stock_prices_daily SET change = round(open - previous_value, 3)")
+conn.exec("UPDATE stock_prices_daily SET percent_change = round((close - open) / open * 100, 3)")
+conn.exec("UPDATE stock_prices_daily SET change = round(close - open, 3)")
 
 # add/update data to column for first_day_close (used for ytd computation)
 conn.exec("UPDATE stock_prices_daily AS t1
