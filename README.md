@@ -43,3 +43,29 @@ Deliverables:
 - A functional data pipeline built using Ruby and Airflow that fetches, processes, and stores financial data.
 - Visualizations and reports that provide meaningful insights from the processed data.
 - Documentation explaining the pipeline's architecture, components, and usage instructions.
+
+
+#User Manual
+
+Prerequisite:
+User's machine must have the following programs installed:
+1. Ubuntu CLI
+2. Ruby
+3. Apache Airflow
+4. Ruby on Rails
+
+Gem Installation
+1. open ubuntu cli
+2. navigate to /dags/ruby_scripts
+3. install gem using the code: bundle install
+4. navigate to /dashboard
+5. install gem using the code: bundle install
+
+To access Dashboard:
+1. run server using the code: rails server
+2. open web browser and go to localhost:3000
+
+To access Airflow Webserver:
+1. open ubuntu cli
+2. activate the virtual environment where your airflow is installed
+3. run airflow webserver and scheduler
