@@ -45,7 +45,7 @@ Deliverables:
 - Documentation explaining the pipeline's architecture, components, and usage instructions.
 
 
-#User Manual
+# User Manual
 
 Prerequisite:
 User's machine must have the following programs installed:
